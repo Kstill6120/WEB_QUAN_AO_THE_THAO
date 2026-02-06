@@ -1,0 +1,187 @@
+﻿@model WebBanDoTheThao.Models.SANPHAM
+@{
+    // Thiết lập Layout là null vì đây là Partial View
+    Layout = null;
+    string brandName = ViewBag.BrandName ?? "N/A";
+
+    // Ảnh chính mặc định
+    string defaultAvatar = Model.AVATAR ?? "default.jpg";
+    string mau = Model.COLOR;
+
+    // Lấy danh sách size thực tế từ Controller (sử dụng list<string>)
+    var availableSizes = ViewBag.AvailableSizes as List<string> ?? new List<string>();
+    var firstSize = availableSizes.FirstOrDefault() ?? "S"; // Chọn size đầu tiên làm mặc định
+
+    // Danh sách biến thể (GIẢ LẬP - giữ lại cho mục đích hình ảnh)
+    var variants = new List<dynamic> {
+        new { Image = defaultAvatar, ColorName = mau, ColorCode = "#107869" }
+    };
+
+    var defaultVariant = variants.FirstOrDefault(v => v.Image == defaultAvatar) ?? variants.First();
+}
+<link rel="stylesheet" href="@Url.Content("~/Assets/CSS/QuickView.css?v=1.1")" />
+
+@if (Model != null)
+{
+    <div class="row">
+        <div class="col-md-6">
+            <div class="product-image-main mb-3">
+                <img id="mainQuickViewImage"
+                     src="@Url.Content("~/Assets/Clothes_Images/" + defaultAvatar)"
+                     class="img-fluid rounded"
+                     alt="@Model.TENSP">
+            </div>
+
+            <div class="d-flex gap-2 mt-3 overflow-auto" id="thumbnailPreviewContainer">
+                @foreach (var variant in variants)
+                {
+                    <div class="thumbnail-item @(variant.Image == defaultVariant.Image ? "active-preview" : "")"
+                         data-img="@Url.Content("~/Assets/Clothes_Images/" + variant.Image)"
+                         data-default="@(variant.Image == defaultVariant.Image ? "true" : "false")">
+                        <img src="@Url.Content("~/Assets/Clothes_Images/" + variant.Image)" class="img-thumbnail" alt="@variant.ColorName Thumbnail">
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <h1 class="h3 fw-bold mb-1">@Model.TENSP</h1>
+            <p class="text-muted small mb-3">
+                Thương hiệu: @brandName.ToUpper() | Mã sản phẩm: @Model.MASP
+            </p>
+
+            <h2 class="text-danger fw-bolder mb-3">@Model.GIA.ToString("N0")₫</h2>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Màu:</label>
+                <div class="d-flex gap-2 align-items-center" id="colorSelectorContainer">
+                    <span class="badge rounded-pill bg-secondary fw-normal">
+                        @defaultVariant.ColorName
+                    </span>
+                    <span id="selectedColorName" class="fw-medium d-none">@defaultVariant.ColorName</span>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label fw-semibold">Size:</label><br />
+                <div class="btn-group size-selector-group" role="group">
+                    
+                    @if (availableSizes.Any())
+                    {
+                        int sizeIndex = 0;
+                        foreach (var size in availableSizes)
+                        {
+                            string sizeId = $"size_{size}";
+                            bool isChecked = (size == firstSize);
+                            
+                           <input type="radio" class="btn-check" name="size" id="@sizeId" 
+                            value="@size" autocomplete="off" @(isChecked ? "checked" : "")>
+
+                            <label class="btn btn-outline-secondary btn-size-selector" 
+                                   for="@sizeId">@size</label>
+                            sizeIndex++;
+                        }
+                    }
+                    else
+                    {
+                        <span class="text-danger small p-2">Hết hàng/Không có size</span>
+                    }
+
+                </div>
+            </div>
+            <hr />
+
+            <div class="p-3" style="border: 2px dashed #dc3545; background-color: #fff3f5;">
+                <h6 class="fw-bold text-danger">KHUYẾN MÃI & ƯU ĐÃI</h6>
+                <ul class="list-unstyled small mb-0">
+                    <li><i class="fas fa-truck me-2"></i> Freeship Toàn Quốc đơn hàng từ 500k (Trừ quả cầu lông, bao cát)</li>
+                    <li><i class="fas fa-hand-holding-usd me-2"></i> Giao hàng COD toàn quốc - Kiểm hàng trước khi thanh toán</li>
+                    <li><i class="fas fa-gift me-2"></i> Đơn hàng càng lớn ưu đãi càng cao - quà tặng hấp dẫn</li>
+                    <li><i class="fas fa-award me-2"></i> Bảo hành nhanh - Tích luỷ điểm cho thành viên.</li>
+                </ul>
+            </div>
+            <hr />
+            <div class="d-flex align-items-center mb-4">
+                <div class="input-group w-auto me-3 quantity-input-group" style="width: 120px !important;">
+                    <button class="btn btn-outline-secondary btn-sm btn-quantity-minus" type="button" style="width: 30px;" onclick="changeQuantityModal(-1)">−</button>
+                    <input type="text" id="quantityInputModal" class="form-control form-control-sm text-center" value="1" min="1" readonly style="width: 60px;">
+                    <button class="btn btn-outline-secondary btn-sm btn-quantity-plus" type="button" style="width: 30px;" onclick="changeQuantityModal(1)">+</button>
+                </div>
+
+                <button class="btn text-uppercase fw-bold btn-add-to-cart-styled" data-masp="@Model.ID">THÊM VÀO GIỎ</button>
+            </div>
+        </div>
+    </div>
+    <script src="@Url.Content("~/Assets/JS/QuickView.js?v=1.1")"></script>
+}
+
+<script>
+    // Logic JS cho Modal (Tăng giảm số lượng - tránh xung đột với hàm chi tiết)
+    function changeQuantityModal(delta) {
+        var input = document.getElementById('quantityInputModal');
+        var current = parseInt(input.value);
+        var min = 1; // Giả định số lượng tối thiểu là 1
+        var newQuantity = current + delta;
+
+        if (newQuantity >= min) {
+            input.value = newQuantity;
+        }
+    }
+    $(document).ready(function() {
+    $('.btn-add-to-cart-styled').off('click').on('click', function() {
+        var button = $(this);
+        var masp = button.data('masp');
+
+        // Lấy size đang chọn
+        var selectedSize = $('input[name="size"]:checked').val();
+        if (!selectedSize) {
+            alert('Vui lòng chọn size!');
+            return;
+        }
+
+        // Lấy số lượng
+        var quantity = parseInt($('#quantityInputModal').val()) || 1;
+
+        button.prop('disabled', true);
+        var originalText = button.text();
+        button.text('Đang xử lý...');
+
+        $.ajax({
+            url: '@Url.Action("ThemGH", "MuaSP")',
+            type: 'POST',
+            data: { masp: masp, size: selectedSize, sl: quantity },
+            success: function (res) {
+                // MỞ KHÓA NÚT KHI THÀNH CÔNG
+                button.prop('disabled', false);
+                button.text(originalText)
+                if (res.success) {
+                    alert('Đã thêm sản phẩm vào giỏ hàng!');
+                    updateCartCount(); // Cập nhật số lượng trên menu
+                } else {
+                    // Nếu server báo lỗi chưa đăng nhập
+                    if (res.code === "LOGIN_REQUIRED") {
+                        alert("Bạn cần đăng nhập để mua hàng!");
+                        window.location.href = res.url; // Dùng JS để chuyển hướng
+                    } else {
+                        alert("Có lỗi xảy ra: " + (res.message || "Không xác định"));
+                    }
+                }
+            },
+            error: function () {
+                button.prop('disabled', false);
+                button.text(originalText);
+                alert('Có lỗi kết nối khi thêm sản phẩm vào giỏ hàng!');
+            }
+        });
+    });
+
+    // Hàm cập nhật số lượng giỏ hàng trên header
+    function updateCartCount() {
+    $.get('@Url.Action("SLGH", "MuaSP")', function(count) {
+        $('#cartCount').text(count);
+    });
+}
+
+});
+
+</script>

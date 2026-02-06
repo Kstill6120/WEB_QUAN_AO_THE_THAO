@@ -1,0 +1,30 @@
+﻿@model List<WebBanDoTheThao.Models.DONHANG>
+
+@foreach (var item in Model)
+{
+    <tr data-madh="@item.ID">
+        <td>@item.MADH</td>
+        <td>@item.KHACHHANG.HOTEN</td>
+        <td>@item.NGAYLAP</td>
+        <td class="text-end">@item.TONGTIEN.ToString("N0") đ</td>
+        <td><span class="badge bg-warning text-dark">@item.TRANGTHAI</span></td>
+        <td class="text-center">
+            <div class="btn-group action-dropdown">
+                <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    Duyệt
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><h6 class="dropdown-header">Chuyển trạng thái</h6></li>
+                    <li><a class="dropdown-item text-success" href="#" onclick="updateOrderStatus('Đang đóng gói', @item.ID)">Đang đóng gói</a></li>
+                    <li><a class="dropdown-item text-primary" href="#" onclick="updateOrderStatus('Đang giao', @item.ID)">Đang giao</a></li>
+                    <li><a class="dropdown-item text-success" href="#" onclick="updateOrderStatus('Đã giao', @item.ID)">Đã giao</a></li>
+
+                    <li><hr class="dropdown-divider"></li>
+
+                    <li><a class="dropdown-item text-warning" href="#" onclick="updateOrderStatus('Chờ xử lý', @item.ID)">Chờ xử lý</a></li>
+                    <li><a class="dropdown-item text-danger" href="#" onclick="updateOrderStatus('Đã hủy', @item.ID)">Hủy đơn hàng</a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+}

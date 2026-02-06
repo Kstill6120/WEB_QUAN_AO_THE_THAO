@@ -1,0 +1,111 @@
+﻿@model WebBanDoTheThao.Models.NGUOIDUNG
+@{
+    ViewBag.Title = "Chi tiết người dùng";
+    Layout = "~/Views/Shared/Admin_Layout.cshtml";
+    var khs = ViewBag.KhachHangs as List<WebBanDoTheThao.Models.KHACHHANG>;
+    var orders = ViewBag.DonHangs as List<WebBanDoTheThao.Models.DONHANG>;
+    var reviews = ViewBag.DanhGias as List<WebBanDoTheThao.Models.DANHGIA>;
+}
+
+<div class="container mt-4">
+    <h2>@(Model.HO + " " + Model.TEN)</h2>
+    <p><b>Email:</b> @Model.EMAIL</p>
+    <p><b>SĐT:</b> @Model.SDT</p>
+    <p><b>Vai trò:</b> @Model.VAITRO</p>
+
+    <div class="mb-3">
+        <button class="btn btn-danger" onclick="banUser(@Model.ID)">🚫 Ban người dùng</button>
+        <a href="@Url.Action("NguoiDung","Admin")" class="btn btn-secondary">⬅️ Quay lại</a>
+    </div>
+
+    <hr />
+
+    <h4>Khách hàng liên kết</h4>
+    <table class="table table-bordered">
+        <thead><tr><th>Mã KH</th><th>Họ tên</th><th>Địa chỉ</th><th>SĐT</th><th>Giới tính</th></tr></thead>
+        <tbody>
+            @foreach (var kh in khs)
+            {
+                <tr>
+                    <td>@kh.MAKH</td>
+                    <td>@kh.HOTEN</td>
+                    <td>@kh.DIACHI</td>
+                    <td>@kh.SDT</td>
+                    <td>@kh.GIOITINH</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <hr />
+    <h4>Lịch sử đơn hàng (@ViewBag.TongDon) — Tổng chi: @String.Format("{0:N0} đ", ViewBag.TongChi)</h4>
+    <table class="table table-bordered">
+        <thead><tr><th>Mã ĐH</th><th>Ngày đặt</th><th>Tổng tiền</th><th>Trạng thái</th></tr></thead>
+        <tbody>
+            @foreach (var dh in orders)
+            {
+                <tr>
+                    <td>@dh.MADH</td>
+                    <td>@dh.NGAYLAP</td>
+                    <td>@String.Format("{0:N0} đ", dh.TONGTIEN)</td>
+                    <td>@dh.TRANGTHAI</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <hr />
+    <h4>Bình luận & Đánh giá</h4>
+    <table class="table table-bordered">
+        <thead><tr><th>Mã SP</th><th>Nội dung</th><th>Sao</th><th>Ngày</th><th>Thao tác</th></tr></thead>
+        <tbody>
+            @foreach (var dg in reviews)
+            {
+                <tr>
+                    <td>@dg.MASP</td>
+                    <td>@dg.BINHLUAN</td>
+                    <td>@dg.SOSAO</td>
+                    <td>@(dg.NGAYDG?.ToString("dd/MM/yyyy"))</td>
+                    <td><button class="btn btn-sm btn-danger" onclick="xoaDanhGia(@dg.ID)">🗑</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script>
+        function xoaDanhGia(id) {
+            if (!confirm("Xóa đánh giá này?")) return;
+            fetch("/Admin/XoaDanhGia", { method: "POST", body: new URLSearchParams({ id }) })
+                .then(r => r.json()).then(d => {
+                    if (d.success) location.reload();
+                    else alert("Lỗi khi xóa đánh giá");
+                });
+        }
+
+        function banUser(id) {
+            if (!confirm("Bạn có chắc chắn muốn cấm (BAN) người dùng này không?")) return;
+            var formData = new FormData();
+            formData.append("id", id);
+
+            fetch("/Admin/BanNguoiDung", {
+                method: "POST",
+                body: formData
+            })
+                .then(r => r.json())
+                .then(d => {
+                    if (d.success) {
+                        alert("Đã BAN người dùng thành công!");
+                        location.reload();
+                    } else {
+                        alert("Lỗi: " + (d.message || "Không thể ban user này."));
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert("Lỗi kết nối server.");
+                });
+        }
+    </script>
+}

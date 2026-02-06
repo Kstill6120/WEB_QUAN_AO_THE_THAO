@@ -1,0 +1,92 @@
+﻿@model WebBanDoTheThao.Models.SANPHAM
+@{
+    ViewBag.Title = "SuaSanPham";
+    Layout = "~/Views/Shared/Admin_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Cập nhật sản phẩm: @Model.TENSP</h2>
+        <a href="@Url.Action("SanPham", "Admin")" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Quay lại
+        </a>
+    </div>
+    @{ if (ViewBag.Kq != null)
+        {
+            <label class="text-danger">@ViewBag.Kq</label>
+        }
+    }
+    @using (Html.BeginForm("SuaSanPham", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="card shadow-sm p-4">
+            @Html.HiddenFor(m => m.MASP)
+            @Html.HiddenFor(m => m.AVATAR)
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label>Tên sản phẩm</label>
+                    @Html.TextBoxFor(m => m.TENSP, new { @class = "form-control", placeholder = "Nhập tên sản phẩm" })
+                    @Html.ValidationMessageFor(m => m.TENSP, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>Thương hiệu</label>
+                    @Html.DropDownListFor(m => m.MATH, (SelectList)ViewBag.ThuongHieuList, "-- Chọn thương hiệu --", new { @class = "form-select" })
+                    @Html.ValidationMessageFor(m => m.MATH, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label>Loại sản phẩm</label>
+                    @Html.DropDownListFor(m => m.MALOAI, (SelectList)ViewBag.LoaiList, "-- Chọn loại --", new { @class = "form-select" })
+                    @Html.ValidationMessageFor(m => m.MALOAI, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>Môn thể thao</label>
+                    @Html.DropDownListFor(m => m.MAMON, (SelectList)ViewBag.MonList, "-- Chọn môn --", new { @class = "form-select" })
+                    @Html.ValidationMessageFor(m => m.MAMON, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>Màu sắc</label>
+                    @Html.TextBoxFor(m => m.COLOR, new { @class = "form-control", placeholder = "Nhập màu sắc" })
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label>Giá</label>
+                    @Html.TextBoxFor(m => m.GIA, new { @class = "form-control", type = "number", min = "0" })
+                    @Html.ValidationMessageFor(m => m.GIA, "", new { @class = "text-danger" })
+                </div>
+                <label>Ảnh sản phẩm</label>
+                <input type="file" name="HinhAnh" class="form-control-file" onchange="previewImage(event)" />
+
+                <img id="preview"
+                     src="~/Assets/Clothes_Images/@Model.AVATAR"
+                     alt="Preview"
+                     style="max-height:100px; display:block; margin-top:10px;" />
+            </div>
+            <div class="form-group">
+                <label>Mô tả</label>
+                @Html.TextAreaFor(m => m.MOTA, 4, 100, new { @class = "form-control", placeholder = "Nhập mô tả..." })
+            </div>
+            <div class="text-right">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Lưu thay đổi</button>
+                <a href="@Url.Action("SanPham", "Admin")" class="btn btn-secondary">Hủy</a>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        function previewImage(event) {
+            var img = document.getElementById('preview');
+            img.src = URL.createObjectURL(event.target.files[0]);
+            img.style.display = 'block';
+        }
+    </script>
+}
+

@@ -1,0 +1,24 @@
+﻿@model WebBanDoTheThao.Models.SANPHAM
+
+<div class="text-center">
+    <img src="~/Assets/Clothes_Images/@Model.AVATAR" class="rounded mb-3 shadow-sm" style="width:150px; height:150px; object-fit:cover;" />
+</div>
+<h5>@Model.TENSP</h5>
+<p>
+    <b>Trạng thái:</b>
+    @if (Model.TRANGTHAI == "Ngừng bán")
+    {
+        <span class="badge bg-danger">Ngừng bán</span>
+    }
+    else
+    {
+        <span class="badge bg-success">Hoạt động</span>
+    }
+</p>
+<p><b>Mã:</b> @Model.MASP</p>
+<p><b>Thương hiệu:</b> @ViewBag.TenTH</p>
+<p><b>Loại:</b> @ViewBag.TenLoai</p>
+<p><b>Môn thể thao:</b> @ViewBag.TenMon</p>
+<p><b>Giá:</b> @String.Format("{0:N0} đ", Model.GIA)</p>
+<p><b>Màu sắc:</b> @Model.COLOR</p>
+<p><b>Mô tả:</b> @Model.MOTA</p>

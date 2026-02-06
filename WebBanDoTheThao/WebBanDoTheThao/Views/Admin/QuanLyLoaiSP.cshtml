@@ -1,0 +1,244 @@
+﻿@model List<WebBanDoTheThao.Models.LOAI>
+@{
+    ViewBag.Title = "Quản lý Loại Sản Phẩm";
+    Layout = "~/Views/Shared/Admin_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-7">
+        <h2>Danh sách Loại Sản Phẩm</h2>
+
+        <form method="get" class="form-inline mb-3">
+            <input type="text" name="search" value="@Request["search"]" class="form-control me-2" placeholder="Tìm theo tên loại...">
+            <button type="submit" class="btn btn-dark">Lọc</button>
+        </form>
+
+        <div class="text-right mb-3">
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addCategoryModal">+ Thêm danh mục</button>
+        </div>
+
+        <table class="table table-bordered table-hover text-center align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Mã Loại</th>
+                    <th>Tên loại</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.Count; i++)
+                {
+                    var loai = Model[i];
+                    <tr onclick="showDetail(@loai.ID)" style="cursor:pointer;">
+                        <td>@(i+1)</td>
+                        <td>@loai.MALOAI</td>
+                        <td>@loai.TENLOAI</td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" onclick="editCategory(@loai.ID, event)">✏️</button>
+
+                            <form action="/Admin/XoaLoaiSP" method="post" style="display:inline" onsubmit="return confirm('Bạn có chắc?');">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@loai.ID" />
+                                <button class="btn btn-sm btn-danger">🗑</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        @Html.Partial("_Pagination")
+
+    </div>
+
+    <div class="col-md-5">
+        <div id="detailPanel" class="card shadow-sm p-3">
+            <h4 class="mb-3">Thông tin danh mục</h4>
+            <div id="detailContent">
+                <p>Chọn một danh mục để xem chi tiết...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Thêm -->
+<div class="modal fade" id="addCategoryModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="addCategoryForm" method="post">
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <h5 class="modal-title">Thêm danh mục</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <label>Tên danh mục</label>
+                    <input type="text" name="TENLOAI" class="form-control" required />
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button class="btn btn-success" type="submit">Thêm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Sửa -->
+<div class="modal fade" id="editCategoryModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="editCategoryForm" method="post">
+                @Html.AntiForgeryToken()
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Sửa danh mục</h5>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="hidden" name="ID" id="edit_ID" />
+
+                    <label>Mã loại</label>
+                    <input type="text" name="MALOAI" id="edit_MALOAI" class="form-control" readonly />
+
+                    <label class="mt-2">Tên loại</label>
+                    <input type="text" name="TENLOAI" id="edit_TENLOAI" class="form-control" required />
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button class="btn btn-primary" type="submit">Lưu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        // Hàm lấy token từ form
+        function getToken(form) {
+            return form.querySelector("input[name='__RequestVerificationToken']").value;
+        }
+
+        function showDetail(id) {
+            fetch(`/Admin/GetLoaiSPById?id=${id}`)
+                .then(r => r.json())
+                .then(data => {
+                    document.getElementById("detailContent").innerHTML = `
+                            <h5>${data.TENLOAI}</h5>
+                            <p><b>Mã:</b> ${data.MALOAI}</p>
+                            <p><b>ID:</b> ${data.ID}</p>
+                            <p class="text-muted">Có ${data.SANPHAM?.length ?? 0} sản phẩm.</p>
+                        `;
+                })
+                .catch(err => console.error("Fetch error:", err));
+        }
+
+        function editCategory(id, event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            fetch(`/Admin/GetLoaiSPById?id=${id}`)
+                .then(r => r.json())
+                .then(data => {
+                    document.getElementById("edit_ID").value = data.ID;
+                    document.getElementById("edit_MALOAI").value = data.MALOAI;
+                    document.getElementById("edit_TENLOAI").value = data.TENLOAI;
+
+                    new bootstrap.Modal("#editCategoryModal").show();
+                })
+                .catch(err => console.error("Fetch error:", err));
+        }
+
+        // === XỬ LÝ THÊM LOẠI SẢN PHẨM (Đã sửa lỗi Token và 500) ===
+        document.getElementById("addCategoryForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const form = e.target;
+            const formData = new FormData(form);
+
+            // Bổ sung Token vào FormData (đã có ở code gốc, nhưng cần đảm bảo)
+            // Lấy token từ input hidden trong form
+            const token = getToken(form);
+            formData.set("__RequestVerificationToken", token); // Dùng set để đảm bảo chỉ có 1 token
+
+            fetch("/Admin/ThemLoaiSP", {
+                method: "POST",
+                body: formData,
+                headers: {
+                    // Thêm Header này để MVC nhận diện đây là AJAX và xử lý token đúng cách
+                    "X-Requested-With": "XMLHttpRequest"
+                }
+            })
+                .then(r => {
+                    // Kiểm tra status code để tránh lỗi SyntaxError khi parse HTML (500 error)
+                    if (!r.ok) {
+                        return r.text().then(text => {
+                            throw new Error('Server returned ' + r.status + ': ' + text.substring(0, 100).replace(/\n/g, ' ') + '...');
+                        });
+                    }
+                    return r.json();
+                })
+                .then(data => {
+                    alert(data.message);
+                    if (data.success) location.reload();
+                })
+                .catch(err => {
+                    console.error("Fetch/Server Error:", err);
+                    alert("Thêm thất bại. Lỗi chi tiết: " + err.message);
+                });
+        });
+
+        document.getElementById("editCategoryForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const form = e.target;
+            const formData = new FormData(form);
+
+            // Đảm bảo Token được thêm vào
+            const tokenInput = form.querySelector("input[name='__RequestVerificationToken']");
+            if (tokenInput) {
+                formData.set("__RequestVerificationToken", tokenInput.value);
+            }
+
+            fetch("/Admin/SuaLoaiSP", {
+                method: "POST",
+                body: formData,
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest"
+                }
+            })
+                .then(r => {
+                    // Nếu Server trả về lỗi 500 hoặc 400, đọc nội dung lỗi dạng Text thay vì JSON
+                    if (!r.ok) {
+                        return r.text().then(text => {
+                            throw new Error(text); // Ném lỗi để catch bắt được
+                        });
+                    }
+                    return r.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        alert(data.message);
+                        location.reload();
+                    } else {
+                        alert("Lỗi: " + data.message);
+                    }
+                })
+                .catch(err => {
+                    console.error("Lỗi chi tiết:", err);
+                    // Hiển thị 1 phần thông báo lỗi để debug (cắt ngắn bớt HTML nếu quá dài)
+                    let msg = err.message;
+                    if (msg.includes("<!DOCTYPE html>")) {
+                        msg = "Lỗi 500 từ Server (Xem Console để biết chi tiết)";
+                    }
+                    alert("Không thể lưu: " + msg);
+                });
+        });
+    </script>
+}

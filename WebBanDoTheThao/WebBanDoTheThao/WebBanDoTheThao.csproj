@@ -1,0 +1,475 @@
+﻿<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{8BD8C6A9-8F19-417F-828E-44235EDA4F68}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WebBanDoTheThao</RootNamespace>
+    <AssemblyName>WebBanDoTheThao</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <Use64BitIISExpress />
+    <IISExpressSSLPort>44327</IISExpressSSLPort>
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.1.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Buffers, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.4.0\lib\netstandard2.0\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.3\lib\netstandard2.0\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.4.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.2\lib\netstandard2.0\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Web.Razor">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.9\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.9\lib\net45\System.Web.Webpages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages.Deployment">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.9\lib\net45\System.Web.Webpages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages.Razor">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.9\lib\net45\System.Web.Webpages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Helpers">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.9\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.2.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.9\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.9\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.9\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.9\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Clothes_Images\aoadidas_nu.jpg" />
+    <Content Include="Assets\Clothes_Images\Arge_Home_24_25.png" />
+    <Content Include="Assets\Clothes_Images\Arsenal_Away_25_26.png" />
+    <Content Include="Assets\Clothes_Images\Arsenal_Home_25_26.png" />
+    <Content Include="Assets\Clothes_Images\ATM_Away_25_26.png" />
+    <Content Include="Assets\Clothes_Images\ATM_Home_25_26.png" />
+    <Content Include="Assets\Clothes_Images\Barca_Home_14_15.png" />
+    <Content Include="Assets\Clothes_Images\Barca_Home_21_22.png" />
+    <Content Include="Assets\Clothes_Images\Bayern_Home_05_06.png" />
+    <Content Include="Assets\Clothes_Images\Bayern_Home_25_26.png" />
+    <Content Include="Assets\Clothes_Images\Belgium_Home_24.png" />
+    <Content Include="Assets\Clothes_Images\brightionHome_25_26.jpg" />
+    <Content Include="Assets\Clothes_Images\CAHN_Home_23_24.png" />
+    <Content Include="Assets\Clothes_Images\Chelsea_Home_25_26.png" />
+    <Content Include="Assets\Clothes_Images\default.png" />
+    <Content Include="Assets\Clothes_Images\England_Home_18_19.png" />
+    <Content Include="Assets\Clothes_Images\France_Home_18.png" />
+    <Content Include="Assets\Clothes_Images\France_Home_20.png" />
+    <Content Include="Assets\Clothes_Images\France_Home_25_26.png" />
+    <Content Include="Assets\Clothes_Images\Germany_Home_24.png" />
+    <Content Include="Assets\Clothes_Images\Inter_Home_10_11.png" />
+    <Content Include="Assets\Clothes_Images\Inter_Home_25_26.png" />
+    <Content Include="Assets\Clothes_Images\Japan_Home_10_11.png" />
+    <Content Include="Assets\Clothes_Images\Japan_Home_20.png" />
+    <Content Include="Assets\Clothes_Images\Japan_Home_24.png" />
+    <Content Include="Assets\Clothes_Images\Japan_Home_25_26.png" />
+    <Content Include="Assets\Clothes_Images\Juve_Home_18_19.png" />
+    <Content Include="Assets\Clothes_Images\Juve_Home_20_21.png" />
+    <Content Include="Assets\Clothes_Images\Juve_Home_25_26.png" />
+    <Content Include="Assets\Clothes_Images\Juve_Home_96_97.png" />
+    <Content Include="Assets\Clothes_Images\Korea_Home_04_05.png" />
+    <Content Include="Assets\Clothes_Images\Korea_Home_20.jpg" />
+    <Content Include="Assets\Clothes_Images\Korea_Home_24_25.png" />
+    <Content Include="Assets\Clothes_Images\liverpool_away_25_26.jpg" />
+    <Content Include="Assets\Clothes_Images\Liverpool_Home_13_14.png" />
+    <Content Include="Assets\Clothes_Images\liverpool_home_25_26.jpg" />
+    <Content Include="Assets\Clothes_Images\liverpool_retro_06_07.jpg" />
+    <Content Include="Assets\Clothes_Images\Marseille_Home_25_26.png" />
+    <Content Include="Assets\Clothes_Images\mci_home.jpg" />
+    <Content Include="Assets\Clothes_Images\Milan_Away_25_26.jpg" />
+    <Content Include="Assets\Clothes_Images\Milan_Home_25_26.png" />
+    <Content Include="Assets\Clothes_Images\MU_Home_23_24.jpg" />
+    <Content Include="Assets\Clothes_Images\Newcastle_Home_24_25.png" />
+    <Content Include="Assets\Clothes_Images\Portugal_Home_25.png" />
+    <Content Include="Assets\Clothes_Images\PSG_Home_25_26.png" />
+    <Content Include="Assets\Clothes_Images\Real_Away_99_00.png" />
+    <Content Include="Assets\Clothes_Images\Real_Home_09_10.png" />
+    <Content Include="Assets\Clothes_Images\Real_Home_17_18.png" />
+    <Content Include="Assets\Clothes_Images\Real_Home_25_26.png" />
+    <Content Include="Assets\Clothes_Images\SLNA_Away_22.png" />
+    <Content Include="Assets\Clothes_Images\Spain_Home_22.png" />
+    <Content Include="Assets\Clothes_Images\Spain_Home_96.png" />
+    <Content Include="Assets\Clothes_Images\TOT_Home_25_26.png" />
+    <Content Include="Assets\Clothes_Images\VietNam_Home_25.png" />
+    <Content Include="Assets\Content\bootstrap-grid.css" />
+    <Content Include="Assets\Content\bootstrap-grid.min.css" />
+    <Content Include="Assets\Content\bootstrap-grid.rtl.css" />
+    <Content Include="Assets\Content\bootstrap-grid.rtl.min.css" />
+    <Content Include="Assets\Content\bootstrap-reboot.css" />
+    <Content Include="Assets\Content\bootstrap-reboot.min.css" />
+    <Content Include="Assets\Content\bootstrap-reboot.rtl.css" />
+    <Content Include="Assets\Content\bootstrap-reboot.rtl.min.css" />
+    <Content Include="Assets\Content\bootstrap-utilities.css" />
+    <Content Include="Assets\Content\bootstrap-utilities.min.css" />
+    <Content Include="Assets\Content\bootstrap-utilities.rtl.css" />
+    <Content Include="Assets\Content\bootstrap-utilities.rtl.min.css" />
+    <Content Include="Assets\Content\bootstrap.css" />
+    <Content Include="Assets\Content\bootstrap.min.css" />
+    <Content Include="Assets\Content\bootstrap.rtl.css" />
+    <Content Include="Assets\Content\bootstrap.rtl.min.css" />
+    <Content Include="Assets\Content\Site.css" />
+    <Content Include="Assets\CSS\Admin.css" />
+    <Content Include="Assets\CSS\Carousel.css" />
+    <Content Include="Assets\CSS\ChatBot.css" />
+    <Content Include="Assets\CSS\Content.css" />
+    <Content Include="Assets\CSS\Footer.css" />
+    <Content Include="Assets\CSS\Nav.css" />
+    <Content Include="Assets\CSS\QuickView.css" />
+    <Content Include="Assets\images\Bong1.png" />
+    <Content Include="Assets\images\ChatBot.png" />
+    <Content Include="Assets\images\download.png" />
+    <Content Include="Assets\images\logo.jpg" />
+    <Content Include="Assets\images\Messenger.png" />
+    <Content Include="Assets\images\phone.png" />
+    <Content Include="Assets\images\slider_1.jpg" />
+    <Content Include="Assets\images\slider_2.jpg" />
+    <Content Include="Assets\images\slider_3.jpg" />
+    <Content Include="Assets\images\slide_product_1_img_1_img.jpg" />
+    <Content Include="Assets\images\zalo.png" />
+    <Content Include="Assets\JS\chatbot.js" />
+    <Content Include="Assets\JS\layout.js" />
+    <Content Include="Assets\JS\QuickView.js" />
+    <Content Include="Assets\Logos\Adidas_Logo.png" />
+    <Content Include="Assets\Logos\Kappa_logo.png" />
+    <Content Include="Assets\Logos\logo_nike.png" />
+    <Content Include="Assets\Logos\logo_puma.png" />
+    <Content Include="Assets\Logos\Mizuno.png" />
+    <Content Include="Assets\Logos\new_balance.png" />
+    <Content Include="Assets\Logos\Under_armour_logo.png" />
+    <Content Include="Assets\Scripts\bootstrap.bundle.js" />
+    <Content Include="Assets\Scripts\bootstrap.bundle.min.js" />
+    <Content Include="Assets\Scripts\bootstrap.esm.js" />
+    <Content Include="Assets\Scripts\bootstrap.esm.min.js" />
+    <Content Include="Assets\Scripts\bootstrap.js" />
+    <Content Include="Assets\Scripts\bootstrap.min.js" />
+    <None Include="Assets\Scripts\jquery-3.7.0.intellisense.js" />
+    <Content Include="Assets\Scripts\jquery-3.7.0.js" />
+    <Content Include="Assets\Scripts\jquery-3.7.0.min.js" />
+    <Content Include="Assets\Scripts\jquery-3.7.0.slim.js" />
+    <Content Include="Assets\Scripts\jquery-3.7.0.slim.min.js" />
+    <None Include="Assets\Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Assets\Scripts\jquery.validate.js" />
+    <Content Include="Assets\Scripts\jquery.validate.min.js" />
+    <Content Include="Assets\Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Assets\Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Assets\Scripts\modernizr-2.8.3.js" />
+    <Content Include="favicon.ico" />
+    <Content Include="Global.asax" />
+    <Content Include="App_Data\training_data.txt" />
+    <Content Include="Models\QLQA.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>QLQA.Context.cs</LastGenOutput>
+      <DependentUpon>QLQA.edmx</DependentUpon>
+    </Content>
+    <Content Include="Models\QLQA.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>QLQA.edmx</DependentUpon>
+      <LastGenOutput>QLQA.cs</LastGenOutput>
+    </Content>
+    <Content Include="Web.config" />
+    <EntityDeploy Include="Models\QLQA.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>QLQA.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\QLQA.edmx.diagram">
+      <DependentUpon>QLQA.edmx</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\ChatBotApiController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\MuaSPController.cs" />
+    <Compile Include="Controllers\ProfileController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BIENTHESP.cs">
+      <DependentUpon>QLQA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CHITIETDONHANG.cs">
+      <DependentUpon>QLQA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CHITIETGIOHANG.cs">
+      <DependentUpon>QLQA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DANHGIA.cs">
+      <DependentUpon>QLQA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Data.cs" />
+    <Compile Include="Models\DONHANG.cs">
+      <DependentUpon>QLQA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DTGioHang.cs" />
+    <Compile Include="Models\GIAMGIA.cs">
+      <DependentUpon>QLQA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GIOHANG.cs">
+      <DependentUpon>QLQA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\KHACHHANG.cs">
+      <DependentUpon>QLQA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\LICHSUDONHANG.cs">
+      <DependentUpon>QLQA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\LICHSUTHANHTOAN.cs">
+      <DependentUpon>QLQA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\LOAI.cs">
+      <DependentUpon>QLQA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MONTT.cs">
+      <DependentUpon>QLQA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\NGUOIDUNG.cs">
+      <DependentUpon>QLQA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\QLQA.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>QLQA.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\QLQA.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>QLQA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\QLQA.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>QLQA.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SANPHAM.cs">
+      <DependentUpon>QLQA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SIZE.cs">
+      <DependentUpon>QLQA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_DangNhap_Result.cs">
+      <DependentUpon>QLQA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_helpdiagramdefinition_Result.cs">
+      <DependentUpon>QLQA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_helpdiagrams_Result.cs">
+      <DependentUpon>QLQA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sysdiagram.cs">
+      <DependentUpon>QLQA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\THUONGHIEU.cs">
+      <DependentUpon>QLQA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\YEUTHICH.cs">
+      <DependentUpon>QLQA.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\web.config" />
+    <Content Include="Assets\Content\bootstrap-grid.css.map" />
+    <Content Include="Assets\Content\bootstrap-grid.min.css.map" />
+    <Content Include="Assets\Content\bootstrap-grid.rtl.css.map" />
+    <Content Include="Assets\Content\bootstrap-grid.rtl.min.css.map" />
+    <Content Include="Assets\Content\bootstrap-reboot.css.map" />
+    <Content Include="Assets\Content\bootstrap-reboot.min.css.map" />
+    <Content Include="Assets\Content\bootstrap-reboot.rtl.css.map" />
+    <Content Include="Assets\Content\bootstrap-reboot.rtl.min.css.map" />
+    <Content Include="Assets\Content\bootstrap-utilities.css.map" />
+    <Content Include="Assets\Content\bootstrap-utilities.min.css.map" />
+    <Content Include="Assets\Content\bootstrap-utilities.rtl.css.map" />
+    <Content Include="Assets\Content\bootstrap-utilities.rtl.min.css.map" />
+    <Content Include="Assets\Content\bootstrap.css.map" />
+    <Content Include="Assets\Content\bootstrap.min.css.map" />
+    <Content Include="Assets\Content\bootstrap.rtl.css.map" />
+    <Content Include="Assets\Content\bootstrap.rtl.min.css.map" />
+    <Content Include="Assets\Scripts\bootstrap.bundle.js.map" />
+    <Content Include="Assets\Scripts\bootstrap.bundle.min.js.map" />
+    <Content Include="Assets\Scripts\bootstrap.esm.js.map" />
+    <Content Include="Assets\Scripts\bootstrap.esm.min.js.map" />
+    <Content Include="Assets\Scripts\bootstrap.js.map" />
+    <Content Include="Assets\Scripts\bootstrap.min.js.map" />
+    <Content Include="Assets\Scripts\jquery-3.7.0.min.map" />
+    <Content Include="Assets\Scripts\jquery-3.7.0.slim.min.map" />
+    <None Include="packages.config" />
+    <Content Include="Views\Admin\DonHang.cshtml" />
+    <Content Include="Views\Admin\DonHangPartial.cshtml" />
+    <Content Include="Views\Admin\Kho.cshtml" />
+    <Content Include="Views\Admin\NguoiDung.cshtml" />
+    <Content Include="Views\Admin\NguoiDungChiTiet.cshtml" />
+    <Content Include="Views\Admin\Profile.cshtml" />
+    <Content Include="Views\Admin\QuanLyLoaiSP.cshtml" />
+    <Content Include="Views\Admin\QuanLyMonTT.cshtml" />
+    <Content Include="Views\Admin\SanPham.cshtml" />
+    <Content Include="Views\Admin\SanPhamChiTiet.cshtml" />
+    <Content Include="Views\Admin\Settings.cshtml" />
+    <Content Include="Views\Admin\SuaSanPham.cshtml" />
+    <Content Include="Views\Admin\ThemSanPham.cshtml" />
+    <Content Include="Views\Admin\ThongKe.cshtml" />
+    <Content Include="Views\Admin\ThuongHieu.cshtml" />
+    <Content Include="Views\Admin\TrangChu.cshtml" />
+    <Content Include="Views\Home\Favorites.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Home\QuickView.cshtml" />
+    <Content Include="Views\Home\Search.cshtml" />
+    <Content Include="Views\Home\ShowFullProduct.cshtml" />
+    <Content Include="Views\Home\ShowQABD.cshtml" />
+    <Content Include="Views\Login\Login.cshtml" />
+    <Content Include="Views\MuaSP\KQ.cshtml" />
+    <Content Include="Views\MuaSP\NhapTTTT.cshtml" />
+    <Content Include="Views\MuaSP\XemGH.cshtml" />
+    <Content Include="Views\MuaSP\_CartCount.cshtml" />
+    <Content Include="Views\Profile\ChiTietTrangThai.cshtml" />
+    <Content Include="Views\Profile\Profile.cshtml" />
+    <Content Include="Views\Shared\Admin_Layout.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Shared\_Pagination.cshtml" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>50877</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>https://localhost:44327/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+    <Error Condition="!Exists('..\packages\Grpc.Core.2.41.1\build\net45\Grpc.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Grpc.Core.2.41.1\build\net45\Grpc.Core.targets'))" />
+  </Target>
+  <Import Project="..\packages\Grpc.Core.2.41.1\build\net45\Grpc.Core.targets" Condition="Exists('..\packages\Grpc.Core.2.41.1\build\net45\Grpc.Core.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

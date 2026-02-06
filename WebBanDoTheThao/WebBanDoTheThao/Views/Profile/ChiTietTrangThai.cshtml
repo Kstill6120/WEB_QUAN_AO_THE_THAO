@@ -1,0 +1,236 @@
+﻿@model WebBanDoTheThao.Models.DONHANG
+@{
+    ViewData["Title"] = "Chi Tiết Trạng Thái Đơn Hàng " + Model.ID;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .timeline {
+        position: relative;
+        padding-left: 30px;
+    }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 3px;
+            background-color: #dee2e6;
+        }
+
+    .timeline-item {
+        position: relative;
+        margin-bottom: 20px;
+        padding-left: 20px;
+    }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background-color: #0d6efd;
+            left: -8px;
+            top: 5px;
+            border: 2px solid #fff;
+            z-index: 1;
+        }
+
+    .timeline-date {
+        font-size: 0.9em;
+        color: #6c757d;
+        margin-bottom: 5px;
+    }
+
+    /* Style cho đánh giá sao */
+    .rating-stars {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: center;
+        gap: 5px;
+    }
+
+        .rating-stars input {
+            display: none;
+        }
+
+        .rating-stars label {
+            font-size: 2rem;
+            color: #ccc;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+            .rating-stars label:hover,
+            .rating-stars label:hover ~ label,
+            .rating-stars input:checked ~ label {
+                color: #ffc107;
+            }
+</style>
+
+<div class="container mt-5">
+    @* Hiển thị thông báo *@
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+
+    <a href="@Url.Action("Profile", "Profile")" class="btn btn-outline-secondary mb-4"><i class="fas fa-arrow-left me-2"></i>Quay lại Profile</a>
+
+    <div class="row">
+        <div class="col-12">
+            <h3 class="fw-bold text-primary">CHI TIẾT ĐƠN HÀNG #@Model.ID</h3>
+            <p><strong>Ngày đặt hàng:</strong> @Model.NGAYLAP</p>
+            <p><strong>Trạng thái hiện tại:</strong> <span class="badge bg-@(@Model.TRANGTHAI == "Đã giao" ? "success" : "warning") fs-6">@Model.TRANGTHAI</span></p>
+            <p><strong>Tổng tiền:</strong> <span class="text-danger fw-bold fs-5">@string.Format("{0:N0} VNĐ", Model.TONGTIEN)</span></p>
+            <hr />
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-info text-white fw-bold">
+                    <i class="fas fa-clipboard-list me-2"></i> Danh sách Sản phẩm
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Sản phẩm</th>
+                                    <th>Số lượng</th>
+                                    <th>Giá (VNĐ)</th>
+                                    <th>Thành tiền</th>
+                                    <th>Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in ViewBag.ChiTietSanPham)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <img src="~/Assets/Clothes_Images/@item.BIENTHESP.SANPHAM.AVATAR" alt="" style="width: 50px; height: 50px; object-fit: cover; margin-right: 10px;" class="rounded">
+                                                <div>
+                                                    <span class="fw-bold">@item.BIENTHESP.SANPHAM.TENSP</span><br />
+                                                    <small class="text-muted">Size: @item.BIENTHESP.SIZE.TENSIZE</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>@item.SOLUONG</td>
+                                        <td>@string.Format("{0:N0}", item.DONGIA)</td>
+                                        <td>@string.Format("{0:N0}", item.DONGIA * item.SOLUONG)</td>
+                                        <td>
+                                            @* CHỈ HIỂN THỊ NÚT ĐÁNH GIÁ NẾU TRẠNG THÁI LÀ ĐÃ GIAO *@
+                                            @if (Model.TRANGTHAI == "Đã giao")
+                                            {
+                                                <button type="button" class="btn btn-warning btn-sm text-dark fw-bold"
+                                                        onclick="openReviewModal('@item.BIENTHESP.SANPHAM.ID', '@item.BIENTHESP.SANPHAM.TENSP', '@Model.ID')">
+                                                    <i class="fas fa-star me-1"></i> Đánh giá
+                                                </button>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white fw-bold">
+                    <i class="fas fa-clock-rotate-left me-2"></i> Lịch sử Đơn hàng
+                </div>
+                <div class="card-body">
+                    <div class="timeline">
+                        @if (ViewBag.LichSuTrangThai != null && ViewBag.LichSuTrangThai.Count > 0)
+                        {
+                            foreach (var lichSu in ViewBag.LichSuTrangThai)
+                            {
+                                <div class="timeline-item">
+                                    <div class="timeline-date">@lichSu.NGAYTHAYDOI.ToString("HH:mm dd/MM/yyyy")</div>
+                                    <div class="timeline-content">
+                                        <div class="fw-bold">
+                                            Trạng thái:
+                                            <span class="badge bg-secondary me-1">@lichSu.TRANGTHAI_CU</span>
+                                            <i class="fas fa-arrow-right small mx-1"></i>
+                                            <span class="badge bg-success">@lichSu.TRANGTHAI_MOI</span>
+                                        </div>
+                                        <p class="small text-muted mt-1">Ghi chú: @(string.IsNullOrEmpty(lichSu.GHICHU) ? "Không có" : lichSu.GHICHU)</p>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <p class="text-muted">Không tìm thấy lịch sử thay đổi trạng thái nào.</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="reviewModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title fw-bold">Đánh Giá Sản Phẩm</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            @using (Html.BeginForm("LuuDanhGia", "Profile", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <input type="hidden" id="modalProductID" name="ProductID" />
+                    <input type="hidden" id="modalOrderID" name="OrderID" />
+
+                    <p class="text-center">Bạn cảm thấy sản phẩm <strong id="modalProductName" class="text-primary"></strong> như thế nào?</p>
+
+                    <div class="rating-stars mb-3">
+                        <input type="radio" name="Rating" id="star5" value="5" checked /><label for="star5" title="Tuyệt vời"><i class="fas fa-star"></i></label>
+                        <input type="radio" name="Rating" id="star4" value="4" /><label for="star4" title="Tốt"><i class="fas fa-star"></i></label>
+                        <input type="radio" name="Rating" id="star3" value="3" /><label for="star3" title="Bình thường"><i class="fas fa-star"></i></label>
+                        <input type="radio" name="Rating" id="star2" value="2" /><label for="star2" title="Tệ"><i class="fas fa-star"></i></label>
+                        <input type="radio" name="Rating" id="star1" value="1" /><label for="star1" title="Rất tệ"><i class="fas fa-star"></i></label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="fw-bold mb-2">Nhận xét của bạn:</label>
+                        <textarea class="form-control" name="Comment" rows="4" placeholder="Hãy chia sẻ trải nghiệm của bạn về sản phẩm này..." required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Gửi đánh giá</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    function openReviewModal(productId, productName, orderId) {
+        // Gán dữ liệu vào Modal
+        document.getElementById('modalProductID').value = productId;
+        document.getElementById('modalOrderID').value = orderId;
+        document.getElementById('modalProductName').innerText = productName;
+
+        // Mở Modal bằng Bootstrap 5
+        var myModal = new bootstrap.Modal(document.getElementById('reviewModal'));
+        myModal.show();
+    }
+</script>

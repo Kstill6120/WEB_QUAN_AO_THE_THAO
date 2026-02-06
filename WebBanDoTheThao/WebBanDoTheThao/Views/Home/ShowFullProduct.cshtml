@@ -1,0 +1,298 @@
+﻿@model WebBanDoTheThao.Models.SANPHAM
+
+@{
+    ViewBag.Title = Model.TENSP;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string brandName = Model.THUONGHIEU?.TENTH ?? "N/A";
+    var availableSizes = ViewBag.AvailableSizes as List<string> ?? new List<string>();
+    var firstSize = availableSizes.FirstOrDefault() ?? "S";
+
+    // Lấy thông tin đánh giá
+    double avgStars = (double)(ViewBag.AvgStars ?? 0);
+    int totalReviews = (int)(ViewBag.TotalReviews ?? 0);
+    var reviewsList = ViewBag.Reviews as List<WebBanDoTheThao.Models.DANHGIA> ?? new List<WebBanDoTheThao.Models.DANHGIA>();
+
+    // [MỚI] Dictionary chứa Size của từng đánh giá
+    var reviewSizes = ViewBag.ReviewSizes as Dictionary<int, string> ?? new Dictionary<int, string>();
+
+    string currentSort = ViewBag.CurrentSort ?? "newest";
+    int? currentStarFilter = ViewBag.CurrentStarFilter;
+}
+
+<link rel="stylesheet" href="@Url.Content("~/Assets/CSS/ProductDetail.css?v=1.1")" />
+
+<nav aria-label="breadcrumb" class="mt-3 py-1 px-3 rounded" style="background-color: #f8f9fa;">
+    <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a href="~/Home/Index" class="text-decoration-none">Trang chủ</a></li>
+        <li class="breadcrumb-item"><a href="~/Home/ShowQABD" class="text-decoration-none">Danh mục</a></li>
+        <li class="breadcrumb-item active text-dark" aria-current="page">@Model.TENSP</li>
+    </ol>
+</nav>
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="product-image-main mb-4 border rounded shadow-sm">
+                <img src="~/Assets/Clothes_Images/@Model.AVATAR" class="img-fluid rounded" alt="@Model.TENSP">
+            </div>
+            <div class="d-flex gap-2 thumbnail-container">
+                <img src="~/Assets/Clothes_Images/@Model.AVATAR" width="80" class="img-thumbnail active-thumbnail" alt="Thumb 1">
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <h1 class="fw-bold mb-1">@Model.TENSP</h1>
+            <p class="text-muted small mb-3">
+                Thương hiệu: <strong>@brandName</strong> | Mã sản phẩm: <strong>@Model.MASP</strong>
+            </p>
+            <h3 class="text-danger fw-bolder mb-3">@Model.GIA.ToString("N0")₫</h3>
+
+            <div class="border border-danger border-dashed p-3 my-3">
+                <h6 class="fw-bold text-danger"><i class="fas fa-gift me-2"></i> KHUYẾN MÃI - ƯU ĐÃI</h6>
+                <ul class="list-unstyled small mb-0">
+                    <li><i class="fas fa-check me-2"></i> Freeship Toàn Quốc đơn hàng từ 500K.</li>
+                    <li><i class="fas fa-check me-2"></i> Giao hàng COD toàn quốc - Kiểm hàng trước.</li>
+                    <li><i class="fas fa-check me-2"></i> Bảo hành nhanh - Tích lũy điểm cho thành viên.</li>
+                </ul>
+            </div>
+
+            <div class="mb-3">
+                <label class="fw-bold small">SIZE:</label>
+                <div class="d-flex gap-2 mt-1 size-selector">
+                    @if (availableSizes.Any())
+                    {
+                        foreach (var size in availableSizes)
+                        {
+                            <button class="btn btn-outline-secondary btn-sm @(size == firstSize ? "active" : "")" data-size="@size">@size</button>
+                        }
+                    }
+                    else
+                    {
+                        <span class="text-danger small">Tạm hết hàng các size</span>
+                    }
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="fw-bold small">Màu sắc: @(Model.COLOR ?? "N/A")</label>
+                <div class="d-flex gap-2 mt-1 color-selector">
+                    <div class="color-swatch border border-primary p-1 rounded" data-color="@Model.COLOR">
+                        <img src="~/Assets/Clothes_Images/@Model.AVATAR" width="30" height="30" class="rounded" alt="Màu chính" style="object-fit: cover;" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex align-items-center mb-4">
+                <div class="input-group w-auto me-3 quantity-input-group" style="width: 120px !important;">
+                    <button class="btn btn-outline-secondary btn-sm" type="button" onclick="changeQuantityDetail(-1)" style="width: 30px;">−</button>
+                    <input type="text" id="quantityInputDetail" class="form-control form-control-sm text-center" value="1" min="1" readonly style="width: 60px;">
+                    <button class="btn btn-outline-secondary btn-sm" type="button" onclick="changeQuantityDetail(1)" style="width: 30px;">+</button>
+                </div>
+
+                <button class="btn btn-danger flex-grow-1 me-2 text-uppercase fw-bold" onclick="addToCart(@Model.ID)">
+                    <i class="fas fa-shopping-cart me-2"></i> THÊM VÀO GIỎ
+                </button>
+            </div>
+            <button class="btn btn-lg btn-primary w-100 mb-3 text-uppercase fw-bold" onclick="buyNow(@Model.ID)">
+                MUA NGAY
+            </button>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3 class="fw-bold mb-3">Mô tả chi tiết sản phẩm</h3>
+            <div class="border p-4 rounded text-muted">
+                @Html.Raw(Model.MOTA ?? "Sản phẩm đang được cập nhật mô tả chi tiết.")
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-12">
+            <hr class="my-4">
+            <h3 class="fw-bold mb-4"><i class="fas fa-star me-2 text-warning"></i> Đánh Giá Sản Phẩm (@totalReviews)</h3>
+
+            <div class="p-4 border rounded shadow-sm bg-light mb-4">
+                <div class="row align-items-center">
+                    <div class="col-md-3 text-center border-end">
+                        <div class="d-flex flex-column align-items-center">
+                            <span class="display-4 fw-bolder text-danger">@avgStars.ToString("0.0")/5</span>
+                            <div class="mb-2 text-warning fs-3">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    if (i <= (int)avgStars)
+                                    {<i class="fas fa-star"></i> }
+                                    else if (i - avgStars < 1 && i - avgStars > 0)
+                                    { <i class="fas fa-star-half-alt"></i> }
+                                    else
+                                    { <i class="far fa-star"></i>}
+                                }
+                            </div>
+                            <span class="text-muted small">@totalReviews Lượt đánh giá</span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-9">
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                            <a href="@Url.Action("ShowFullProduct", new { id = Model.ID, page = 1, sort = currentSort, starFilter = (int?)null })"
+                               class="btn @(!currentStarFilter.HasValue ? "btn-danger" : "btn-outline-secondary") btn-sm rounded-pill">Tất cả (@totalReviews)</a>
+
+                            @for (int i = 5; i >= 1; i--)
+                            {
+                                <a href="@Url.Action("ShowFullProduct", new { id = Model.ID, page = 1, sort = currentSort, starFilter = i })"
+                                   class="btn btn-sm @(currentStarFilter == i ? "btn-danger" : "btn-outline-secondary") rounded-pill">@i Sao</a>
+                            }
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center border-top pt-3">
+                            <div class="d-flex gap-3 align-items-center">
+                                <span class="fw-bold small">Sắp xếp theo:</span>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <a href="@Url.Action("ShowFullProduct", new { id = Model.ID, page = 1, sort = "newest", starFilter = currentStarFilter })"
+                                       class="btn btn-sm @(currentSort == "newest" ? "btn-primary" : "btn-outline-primary")">Mới nhất</a>
+                                    <a href="@Url.Action("ShowFullProduct", new { id = Model.ID, page = 1, sort = "oldest", starFilter = currentStarFilter })"
+                                       class="btn btn-sm @(currentSort == "oldest" ? "btn-primary" : "btn-outline-primary")">Cũ nhất</a>
+                                    <a href="@Url.Action("ShowFullProduct", new { id = Model.ID, page = 1, sort = "highest", starFilter = currentStarFilter })"
+                                       class="btn btn-sm @(currentSort == "highest" ? "btn-primary" : "btn-outline-primary")">Sao cao nhất</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="review-list">
+                @if (reviewsList.Any())
+                {
+                    foreach (var bl in reviewsList)
+                    {
+                        var kh = bl.KHACHHANG;
+                        <div class="card mb-3 review-item">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start">
+                                    <div class="me-3 text-center">
+                                        <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; font-weight: bold;">
+                                            @(kh?.HOTEN?.Substring(0, 1).ToUpper() ?? "N")
+                                        </div>
+                                    </div>
+
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <h6 class="mb-0 fw-bold">
+                                                @if (kh != null && kh.HOTEN != null && kh.HOTEN.Contains(" "))
+                                                {
+                                                    @(kh.HOTEN.Substring(0, 1) + "***" + kh.HOTEN.Substring(kh.HOTEN.LastIndexOf(' ') + 1))
+                                                }
+                                                else
+                                                {
+                                                    @(kh?.HOTEN ?? "Khách hàng ẩn")
+                                                }
+                                            </h6>
+                                            <small class="text-muted">@(bl.NGAYDG?.ToString("dd/MM/yyyy") ?? "N/A")</small>
+                                        </div>
+
+                                        <div class="text-warning mb-2">
+                                            @for (int i = 0; i < bl.SOSAO; i++)
+                                            {<i class="fas fa-star"></i>}
+                                            @for (int i = 0; i < (5 - bl.SOSAO); i++)
+                                            {<i class="far fa-star"></i>}
+                                        </div>
+
+                                        <p class="small text-muted mb-2">
+                                            <span class="me-3">
+                                                <strong>Màu sắc:</strong> @(Model.COLOR ?? "N/A")
+                                            </span>
+                                            <span>
+                                                <strong>Kích cỡ:</strong>
+                                                @(reviewSizes.ContainsKey(bl.ID) ? reviewSizes[bl.ID] : "Tiêu chuẩn")
+                                            </span>
+                                        </p>
+
+                                        <p class="mb-3">@bl.BINHLUAN</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="alert alert-warning text-center">Sản phẩm này chưa có đánh giá nào.</div>
+                }
+
+                @Html.Partial("_Pagination")
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Logic Javascript giữ nguyên như cũ
+            window.changeQuantityDetail = function (delta) {
+                var input = $('#quantityInputDetail');
+                var current = parseInt(input.val()) || 1;
+                var min = parseInt(input.attr('min')) || 1;
+                var newQuantity = current + delta;
+                if (newQuantity >= min) { input.val(newQuantity); }
+            };
+
+            $('.size-selector button').on('click', function () {
+                $('.size-selector button').removeClass('active');
+                $(this).addClass('active');
+            });
+
+            $('.color-selector .color-swatch').on('click', function () {
+                $('.color-selector .color-swatch').removeClass('border-primary');
+                $(this).addClass('border-primary');
+            });
+
+            window.addToCart = function (masp) {
+                var selectedSize = $('.size-selector button.active').data('size');
+                if (!selectedSize) { alert('Vui lòng chọn size!'); return; }
+                var quantity = parseInt($('#quantityInputDetail').val()) || 1;
+
+                $.ajax({
+                    url: '@Url.Action("ThemGH", "MuaSP")',
+                    type: 'POST',
+                    data: { masp: masp, size: selectedSize, sl: quantity },
+                    success: function (res) {
+                        if (res.success) {
+                            alert('Đã thêm sản phẩm vào giỏ hàng!');
+                            updateCartCount();
+                        } else {
+                            if (res.code === "LOGIN_REQUIRED") {
+                                alert("Bạn cần đăng nhập để mua hàng!");
+                                window.location.href = res.url;
+                            } else {
+                                alert("Có lỗi xảy ra: " + (res.message || "Không xác định"));
+                            }
+                        }
+                    },
+                    error: function () { alert('Có lỗi kết nối khi thêm sản phẩm vào giỏ hàng!'); }
+                });
+            };
+
+            window.buyNow = function (masp) {
+                var selectedSize = $('.size-selector button.active').data('size');
+                if (!selectedSize) { alert('Vui lòng chọn size!'); return; }
+                var quantity = parseInt($('#quantityInputDetail').val()) || 1;
+
+                $.ajax({
+                    url: '@Url.Action("ThemGH", "MuaSP")',
+                    type: 'POST',
+                    data: { masp: masp, size: selectedSize, sl: quantity },
+                    success: function () { window.location.href = '@Url.Action("NhapTTTT", "MuaSP")'; },
+                    error: function () { alert('Có lỗi khi thêm sản phẩm vào giỏ hàng!'); }
+                });
+            };
+
+            function updateCartCount() {
+                $.get('@Url.Action("SLGH", "MuaSP")', function (count) { $('#cartCount').text(count); });
+            }
+        });
+    </script>
+}

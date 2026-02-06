@@ -1,0 +1,375 @@
+﻿@model List<WebBanDoTheThao.Models.DONHANG>
+@{
+    ViewBag.Title = "Đơn hàng";
+    Layout = "~/Views/Shared/Admin_Layout.cshtml";
+}
+
+<style>
+    .action-dropdown {
+        overflow: visible !important;
+        position: relative !important;
+    }
+</style>
+
+<div class="container-fluid p-0">
+
+    <div class="d-flex align-items-center mb-4">
+        <h2 class="mb-0">Quản lý Đơn hàng</h2>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white border-bottom-0 pt-3">
+                    <h5 class="card-title mb-0">Danh sách Đơn hàng</h5>
+                </div>
+                <div class="card-body py-3 border-bottom">
+                    <div class="d-flex flex-wrap align-items-center gap-2">
+                        <input type="text" id="search-query" class="form-control form-control-sm flex-grow-1" style="max-width: 250px;" placeholder="Tìm Mã ĐH, Tên Khách hàng..." value="@ViewBag.CurrentKeyword" />
+                        <select id="status-filter" class="form-select form-select-sm w-auto" style="min-width: 150px;">
+                            <option selected value="">-- Tất cả trạng thái --</option>
+                            <option value="Chờ xử lý" @(ViewBag.CurrentStatus == "Chờ xử lý" ? "selected" : "")>Chờ xử lý</option>
+                            <option value="Đang đóng gói" @(ViewBag.CurrentStatus == "Đang đóng gói" ? "selected" : "")>Đang đóng gói</option>
+                            <option value="Đang giao" @(ViewBag.CurrentStatus == "Đang giao" ? "selected" : "")>Đang giao</option>
+                            <option value="Đã giao" @(ViewBag.CurrentStatus == "Đã giao" ? "selected" : "")>Đã giao</option>
+                            <option value="Đã hủy" @(ViewBag.CurrentStatus == "Đã hủy" ? "selected" : "")>Đã hủy</option>
+                        </select>
+                        <button class="btn btn-sm btn-primary"><i class="fa-solid fa-filter me-1"></i> Lọc</button>
+                    </div>
+                </div>
+
+
+                <div class="table-responsive">
+                    <table class="table table-hover table-sm mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th style="width: 100px;">Mã ĐH</th>
+                                <th style="min-width: 150px;">Khách hàng</th>
+                                <th style="width: 120px;">Ngày lập</th>
+                                <th class="text-end" style="width: 120px;">Tổng tiền</th>
+                                <th style="width: 140px;">Trạng thái</th>
+                                <th class="text-center" style="width: 150px;">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="order-table-body">
+                            @foreach (var item in Model)
+                            {
+                                <tr data-madh="@item.ID">
+                                    <td>@item.MADH</td>
+                                    <td>@item.KHACHHANG.HOTEN</td>
+                                    <td>@item.NGAYLAP</td>
+                                    <td class="text-end">@item.TONGTIEN.ToString("N0") đ</td>
+                                    <td><span class="badge bg-warning text-dark">@item.TRANGTHAI</span></td>
+                                    <td class="text-center">
+                                        <div class="btn-group action-dropdown">
+                                            <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Duyệt
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li><h6 class="dropdown-header">Chuyển trạng thái</h6></li>
+                                                <li><a class="dropdown-item text-success" href="#" onclick="updateOrderStatus('Đang đóng gói', @item.ID)">Đang đóng gói</a></li>
+                                                <li><a class="dropdown-item text-primary" href="#" onclick="updateOrderStatus('Đang giao', @item.ID)">Đang giao</a></li>
+                                                <li><a class="dropdown-item text-success" href="#" onclick="updateOrderStatus('Đã giao', @item.ID)">Đã giao</a></li>
+
+                                                <li><hr class="dropdown-divider"></li>
+
+                                                <li><a class="dropdown-item text-warning" href="#" onclick="updateOrderStatus('Chờ xử lý', @item.ID)">Hoàn nguyên: Chờ xử lý</a></li>
+                                                <li><a class="dropdown-item text-danger" href="#" onclick="updateOrderStatus('Đã hủy', @item.ID)">Hủy đơn hàng</a></li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                    @Html.Partial("_Pagination")
+                </div>
+                <div class="card-footer bg-white text-muted py-2">
+                    <small>Hiển thị 1-10 trên tổng số @ViewBag.TotalPages đơn hàng.</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4" id="chi-tiet-cot">
+            <div class="card shadow-sm sticky-top" style="top: 70px;">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Thông tin chi tiết Đơn hàng</h5>
+                    <p class="text-muted small" id="detail-placeholder">
+                        Chọn một đơn hàng bằng cách nhấn vào hàng đó để xem chi tiết thông tin, sản phẩm đã đặt và lịch sử xử lý.
+                    </p>
+                    <div id="order-details-content">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // ==========================================================
+        // HÀM REFRESH BẢNG (AJAX)
+        // ==========================================================
+        function refreshOrderTable(page = @ViewBag.Page) {
+            // Lấy giá trị hiện tại của các Control
+            const keyword = $('#search-query').val();
+            const statusFilter = $('#status-filter').val();
+
+            $.ajax({
+                url: '@Url.Action("GetPartialOrderTable", "Admin")',
+                type: 'GET',
+                // TRUYỀN CÁC THAM SỐ LỌC VÀ PHÂN TRANG VÀO ĐÂY
+                data: { page: page, keyword: keyword, status: statusFilter },
+                success: function (html) {
+                    $('#order-table-body').html(html);
+
+                    // Xóa chi tiết đơn hàng cũ sau khi bảng refresh
+                    document.getElementById('detail-placeholder').style.display = 'block';
+                    document.getElementById('order-details-content').innerHTML = '';
+                },
+                error: function () {
+                    alert('Không thể làm mới danh sách đơn hàng.');
+                }
+            });
+        }
+
+
+        // ==========================================================
+        // HÀM CẬP NHẬT TRẠNG THÁI (AJAX)
+        // ==========================================================
+        function updateOrderStatus(statusStr, madh) {
+            if (!confirm('Bạn có chắc chắn muốn chuyển trạng thái đơn hàng ' + madh + ' sang: ' + statusStr + '?')) {
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("UpdateTrangThaiDH", "Admin")',
+                type: 'POST',
+                data: { status: statusStr, madh: madh },
+
+                success: function (response) {
+                    if (response.success) {
+                        refreshOrderTable(@ViewBag.Page); // Refresh và giữ nguyên trang hiện tại
+                    } else {
+                        alert('Lỗi: ' + response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    alert('Lỗi hệ thống khi cập nhật trạng thái.');
+                }
+            });
+        }
+
+
+        // ==========================================================
+        // HÀM LOAD CHI TIẾT
+        // ==========================================================
+        function loadChiTietDonHang(madh, clickedElement) {
+
+            const phiVanChuyen = 0;
+
+            document.getElementById('detail-placeholder').style.display = 'none';
+            const contentDiv = document.getElementById('order-details-content');
+
+            // Xử lý Highlight hàng được click
+            document.querySelectorAll('.table-hover tbody tr').forEach(row => {
+                row.classList.remove('table-active');
+            });
+            clickedElement.classList.add('table-active');
+
+            contentDiv.innerHTML = `<div class="text-center p-5"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải thông tin...</div>`;
+
+            // --- BƯỚC 1: GỌI AJAX LẤY THÔNG TIN CHUNG ĐƠN HÀNG ---
+            $.ajax({
+                url: '@Url.Action("GetDonHangInfo", "Admin")',
+                type: 'GET',
+                data: { madh: madh },
+                success: function (donHangInfo) {
+
+                    if (!donHangInfo.success) {
+                        contentDiv.innerHTML = `<div class="alert alert-warning">${donHangInfo.message}</div>`;
+                        return;
+                    }
+
+                    const giamGiaThucTe = donHangInfo.GiamGiaThucTe || 0;
+                    let maGiamGiaText = 'Không áp dụng';
+                    if (donHangInfo.TenGG) {
+                        maGiamGiaText = `${donHangInfo.TenGG} (-${giamGiaThucTe.toLocaleString('vi-VN')} đ)`;
+                    }
+
+                    // --- BƯỚC 2: GỌI AJAX LẤY CHI TIẾT SẢN PHẨM ---
+                    $.ajax({
+                        url: '@Url.Action("GetChiTietDonHang", "Admin")',
+                        type: 'GET',
+                        data: { madh: madh },
+                        success: function (chiTietList) {
+
+                            // Biến kiểm tra có sản phẩm nào thiếu hàng không
+                            let isShortage = false;
+
+                            let chiTietTableHtml = `
+                                <h6 class="text-info"><i class="fa-solid fa-box-open me-1"></i> Sản phẩm đã đặt</h6>
+                                <table class="table table-sm small table-striped">
+                                    <thead>
+                                        <tr class="table-dark">
+                                            <th>Tên SP/Size</th>
+                                            <th class="text-center">SL Đặt</th>
+                                            <th class="text-center">Tồn Kho</th> <th class="text-end">Giá</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                            `;
+
+                            let tongThanhTienSP = 0;
+
+                            chiTietList.forEach(item => {
+                                const donGiaFormatted = item.DonGia.toLocaleString('vi-VN');
+                                tongThanhTienSP += item.ThanhTien || (item.SoLuong * item.DonGia);
+
+                                // Logic kiểm tra tồn kho
+                                let rowClass = "";
+                                let tonKhoDisplay = item.SoLuongTon;
+
+                                // Nếu Đặt > Tồn -> Tô đỏ
+                                if (item.SoLuong > item.SoLuongTon) {
+                                    isShortage = true;
+                                    rowClass = "table-danger text-danger fw-bold"; // Class Bootstrap tô màu đỏ
+                                    tonKhoDisplay = `<i class="fa-solid fa-triangle-exclamation"></i> ${item.SoLuongTon}`;
+                                }
+
+                                chiTietTableHtml += `
+                                        <tr class="${rowClass}">
+                                            <td>
+                                                ${item.TenSP} - <span class="badge bg-secondary">${item.TenBienThe}</span>
+                                                ${item.SoLuong > item.SoLuongTon ? '<br><small>Hết hàng trong kho!</small>' : ''}
+                                            </td>
+                                            <td class="text-center">${item.SoLuong}</td>
+                                            <td class="text-center">${tonKhoDisplay}</td>
+                                            <td class="text-end">${donGiaFormatted} đ</td>
+                                        </tr>
+                                `;
+                            });
+                            chiTietTableHtml += `</tbody></table>`;
+
+                            // Tạo thông báo cảnh báo nếu thiếu hàng
+                            let warningHtml = "";
+                            if (isShortage) {
+                                warningHtml = `
+                                    <div class="alert alert-danger" role="alert">
+                                        <i class="fa-solid fa-circle-exclamation me-2"></i>
+                                        <strong>CẢNH BÁO:</strong> Một số sản phẩm trong đơn hàng này không đủ tồn kho.
+                                        Bạn không thể duyệt đơn hàng này sang trạng thái "Đang giao".
+                                    </div>
+                                `;
+                            }
+
+                            // TÍNH TỔNG CỘNG CUỐI CÙNG
+                            const tongCongCuoi = tongThanhTienSP - giamGiaThucTe;
+
+                            // --- ĐIỀN DỮ LIỆU ĐỘNG VÀO HTML ---
+                            let htmlContent = `
+                                <h5 class="text-primary mb-3 border-bottom pb-2">Đơn hàng: ${donHangInfo.MaDH}</h5>
+
+                                ${warningHtml} <p class="mb-1"><strong>Khách hàng:</strong> ${donHangInfo.TenKhachHang}</p>
+                                <p class="mb-1"><strong>Địa chỉ giao:</strong> ${donHangInfo.DiaChi}</p>
+                                <p class="mb-1"><strong>PT Thanh toán:</strong> ${donHangInfo.PhuongThuc}</p>
+                                <p class="mb-1"><strong>Ngày lập:</strong> ${donHangInfo.NgayLap}</p>
+                                <p class="mb-3"><strong>Mã giảm giá:</strong> ${maGiamGiaText}</p>
+
+                                <hr class="my-3"/>
+
+                                ${chiTietTableHtml}
+
+                                <div class="text-end small">
+                                    <p class="mb-0">Tổng tiền SP: ${tongThanhTienSP.toLocaleString('vi-VN')} đ</p>
+                                    <p class="mb-0 ${giamGiaThucTe > 0 ? 'text-danger' : 'text-muted'}">Giảm giá: -${giamGiaThucTe.toLocaleString('vi-VN')} đ</p>
+                                    <h6 class="text-primary border-top pt-2 mt-2">TỔNG CỘNG: ${tongCongCuoi.toLocaleString('vi-VN')} đ</h6>
+                                </div>
+
+                                <hr class="my-3"/>
+
+                                <h6><i class="fa-solid fa-history me-1"></i> Lịch sử xử lý</h6>
+                                <ul class="list-unstyled small">
+                                    <li><i class="fa-solid fa-check-circle text-success me-1"></i> **${donHangInfo.NgayLap}:** Đơn hàng được lập.</li>
+                                    <li><i class="fa-solid fa-hourglass-half text-warning me-1"></i> **Hiện tại:** ${donHangInfo.PhuongThuc}.</li>
+                                </ul>
+                            `;
+
+                            contentDiv.innerHTML = htmlContent;
+
+                            // Cuộn màn hình
+                            document.getElementById('chi-tiet-cot').scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                        },
+                        error: function (xhr, status, error) {
+                            contentDiv.innerHTML = `<div class="alert alert-danger">Lỗi tải chi tiết sản phẩm.</div>`;
+                        }
+                    });
+
+                },
+                error: function (xhr, status, error) {
+                    contentDiv.innerHTML = `<div class="alert alert-danger">Lỗi tải thông tin đơn hàng.</div>`;
+                }
+            });
+        }
+
+
+        // ==========================================================
+        // ỦY QUYỀN SỰ KIỆN (DELEGATION) VÀ FIX DROPDOWN
+        // ==========================================================
+
+        $(document).ready(function() {
+            const tableBodyId = '#order-table-body';
+
+            // 1. Uỷ quyền cho việc click vào hàng để tải chi tiết (FIX LỖI MẤT SỰ KIỆN)
+            $(document).on('click', tableBodyId + ' tr', function() {
+                // Lấy madh từ data-madh attribute (đã được định nghĩa trong razor)
+                const madh = $(this).data('madh');
+                loadChiTietDonHang(madh, this);
+            });
+
+            // 2. GÁN SỰ KIỆN CHO NÚT LỌC (Khi nhấn nút Lọc)
+            $('.btn-sm.btn-primary').click(function() {
+                refreshOrderTable(1); // Chuyển về trang 1 khi lọc
+            });
+
+            // Gắn sự kiện Enter cho ô tìm kiếm
+            $('#search-query').keypress(function(e) {
+                if (e.which === 13) { // 13 là mã phím Enter
+                    refreshOrderTable(1);
+                }
+            });
+        });
+
+        // Fix lỗi Dropdown bị cắt (giữ nguyên)
+        document.addEventListener('shown.bs.dropdown', function (e) {
+            if (!e.target.classList.contains('action-dropdown')) {
+                return;
+            }
+
+            const dropdownToggle = e.target;
+            const dropdownMenu = dropdownToggle.querySelector('.dropdown-menu');
+
+            if (!dropdownMenu) return;
+
+            const rect = dropdownMenu.getBoundingClientRect();
+            const isCutOff = rect.bottom > window.innerHeight;
+
+            if (isCutOff) {
+                dropdownToggle.classList.add('dropup');
+            } else {
+                dropdownToggle.classList.remove('dropup');
+            }
+        });
+
+        document.addEventListener('hidden.bs.dropdown', function (e) {
+            if (e.target.classList.contains('action-dropdown')) {
+                e.target.classList.remove('dropup');
+            }
+        });
+
+    </script>
+}

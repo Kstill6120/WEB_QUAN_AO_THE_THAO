@@ -1,0 +1,249 @@
+﻿@model List<WebBanDoTheThao.Models.MONTT>
+@{
+    ViewBag.Title = "Quản lý môn thể thao";
+    Layout = "~/Views/Shared/Admin_Layout.cshtml";
+}
+
+<div class="row">
+    <!-- ================= DANH SÁCH ================ -->
+    <div class="col-md-7">
+        <h2>Danh sách môn thể thao</h2>
+
+        <form method="get" class="form-inline mb-3">
+            <input type="text" name="search" value="@Request["search"]" class="form-control me-2" placeholder="Tìm theo tên môn...">
+            <button type="submit" class="btn btn-dark">Lọc</button>
+        </form>
+
+        <div class="text-right mb-3">
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addSportModal">+ Thêm môn thể thao</button>
+        </div>
+
+        <table class="table table-bordered table-hover text-center align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Mã Môn</th>
+                    <th>Tên Môn</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.Count; i++)
+                {
+                    var m = Model[i];
+                    <tr onclick="showDetail(@m.ID)" style="cursor:pointer;">
+                        <td>@(i+1)</td>
+                        <td>@m.MAMON</td>
+                        <td>@m.TENMON</td>
+
+                        <td>
+                            <button class="btn btn-sm btn-primary" onclick="editSport(@m.ID, event)">✏️</button>
+
+                            <form style="display:inline;" onsubmit="deleteSport(event, @m.ID)">
+                                @Html.AntiForgeryToken()
+                                <button class="btn btn-sm btn-danger">🗑</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        @Html.Partial("_Pagination")
+    </div>
+
+    <!-- ================== PANEL CHI TIẾT ================== -->
+    <div class="col-md-5">
+        <div class="card shadow-sm p-3" id="detailPanel">
+            <h4 class="mb-3">Thông tin môn thể thao</h4>
+            <div id="detailContent">
+                <p>Chọn một môn thể thao để xem chi tiết...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================== MODAL THÊM ================== -->
+<div class="modal fade" id="addSportModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="addSportForm" method="post">
+                @Html.AntiForgeryToken()
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Thêm môn thể thao</h5>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <label>Tên môn thể thao</label>
+                    <input type="text" name="TENMON" class="form-control" required>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button class="btn btn-success" type="submit">Thêm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ================== MODAL SỬA ================== -->
+<div class="modal fade" id="editSportModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="editSportForm" method="post">
+                @Html.AntiForgeryToken()
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Sửa môn thể thao</h5>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="hidden" name="ID" id="edit_ID">
+
+                    <label>Mã môn</label>
+                    <input type="text" id="edit_MAMON" class="form-control" readonly>
+
+                    <label class="mt-2">Tên môn</label>
+                    <input type="text" name="TENMON" id="edit_TENMON" class="form-control" required>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button class="btn btn-primary" type="submit">Lưu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+
+        // ======================
+        // LẤY TOKEN CHUẨN
+        // ======================
+        function getToken(form) {
+            return form.querySelector("input[name='__RequestVerificationToken']").value;
+        }
+
+        // ======================
+        // HIỂN THỊ CHI TIẾT
+        // ======================
+        function showDetail(id) {
+            fetch(`/Admin/GetMonTTById?id=${id}`)
+                .then(r => r.json())
+                .then(data => {
+                    document.getElementById("detailContent").innerHTML = `
+                        <h5>${data.TENMON}</h5>
+                        <p><b>Mã môn:</b> ${data.MAMON}</p>
+                        <p><b>ID:</b> ${data.ID}</p>
+                        <p class="text-muted">Có ${data.SANPHAM?.length ?? 0} sản phẩm.</p>
+                    `;
+                });
+        }
+
+        // ======================
+        // MỞ MODAL SỬA
+        // ======================
+        function editSport(id, event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            fetch(`/Admin/GetMonTTById?id=${id}`)
+                .then(r => r.json())
+                .then(data => {
+                    document.getElementById("edit_ID").value = data.ID;
+                    document.getElementById("edit_MAMON").value = data.MAMON;
+                    document.getElementById("edit_TENMON").value = data.TENMON;
+
+                    new bootstrap.Modal(document.getElementById("editSportModal")).show();
+                });
+        }
+
+        // ======================
+        // THÊM (AJAX)
+        // ======================
+        document.getElementById("addSportForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const form = e.target;
+            const fd = new FormData(form);
+
+            fd.set("__RequestVerificationToken", getToken(form));
+
+            fetch("/Admin/ThemMonTT", {
+                method: "POST",
+                body: fd,
+                headers: { "X-Requested-With": "XMLHttpRequest" }
+            })
+                .then(r => r.ok ? r.json() : r.text().then(t => { throw new Error(t); }))
+                .then(data => {
+                    alert(data.message);
+                    if (data.success) location.reload();
+                })
+                .catch(e => alert("Lỗi: " + e.message));
+        });
+
+        // ======================
+        // SỬA (AJAX)
+        // ======================
+        document.getElementById("editSportForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const form = e.target;
+            const fd = new FormData(form);
+
+            fd.set("__RequestVerificationToken", getToken(form));
+
+            fetch("/Admin/SuaMonTT", {
+                method: "POST",
+                body: fd,
+                headers: { "X-Requested-With": "XMLHttpRequest" }
+            })
+                .then(r => r.json())
+                .then(data => {
+                    if (!data.success) return alert(data.message);
+                    location.reload();
+                });
+        });
+
+        // ======================
+        // XÓA (AJAX)
+        // ======================
+        function deleteSport(e, id) {
+            e.preventDefault();
+            if (!confirm("Bạn muốn xóa môn này?")) return;
+
+            const form = e.target.closest("form"); 
+            const token = form.querySelector("input[name='__RequestVerificationToken']").value;
+
+            const fd = new FormData();
+            fd.append("id", id);
+            fd.append("__RequestVerificationToken", token);
+
+            fetch("/Admin/XoaMonTT", {
+                method: "POST",
+                body: fd,
+                headers: { "X-Requested-With": "XMLHttpRequest" }
+            })
+                .then(r => {
+                    if (!r.ok) throw new Error("Server error " + r.status);
+                    return r.json();
+                })
+                .then(data => {
+                    alert(data.message);
+                    if (data.success) location.reload();
+                })
+                .catch(err => {
+                    console.error("Delete error:", err);
+                    alert("Không thể xóa. Lỗi: " + err.message);
+                });
+        }
+
+
+    </script>
+}

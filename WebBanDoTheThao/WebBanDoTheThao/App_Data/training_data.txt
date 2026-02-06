@@ -1,0 +1,528 @@
+﻿Chào shop|greeting
+Hi ad|greeting
+Shop ơi cho mình hỏi chút|greeting
+Alo shop có đó không|greeting
+Chào bạn|greeting
+Hello shop|greeting
+Ad ơi tư vấn giúp mình với|greeting
+Hế lô shop|greeting
+Xin chào|greeting
+Shop online chưa ạ|greeting
+Có ai trực page không|greeting
+Mình cần hỗ trợ gấp|greeting
+Chào buổi sáng shop|greeting
+Chào buổi tối|greeting
+Hi shop mình muốn mua hàng|greeting
+Chào ad đẹp trai|greeting
+Shop ơi check inbox mình với|greeting
+Dạ chào shop|greeting
+Alo alo|greeting
+Hu lô shop|greeting
+Shop ơi rep mình đi|greeting
+Tư vấn cho em với ad ơi|greeting
+Chào admin|greeting
+Có nhân viên nào ở đó không|greeting
+Shop làm việc tới mấy giờ vậy|greeting
+Hi|greeting
+Hello|greeting
+Chào cả nhà|greeting
+Shop mình ở đâu vậy ạ|greeting
+Alo 1234|greeting
+Shop ơi mình hỏi xíu|greeting
+Bạn ơi cho mình hỏi|greeting
+Chào shop nhé|greeting
+Chúc shop đắt hàng|greeting
+Shop có tư vấn online không|greeting
+Mình mới vào web lần đầu|greeting
+Chào bạn nhân viên|greeting
+Shop ơi rep tin nhắn đi|greeting
+Ad có rảnh không tư vấn e với|greeting
+Xin chào cửa hàng|greeting
+Chào shop thể thao|greeting
+Hi there|greeting
+Chào nha|greeting
+Shop ơi ơi|greeting
+Mình cần tìm đồ thể thao|greeting
+Tư vấn viên ơi|greeting
+Chào shop, mình muốn xem đồ|greeting
+Shop mở cửa chưa|greeting
+Hello ad|greeting
+Chào shop yêu|greeting
+Shop có bán áo đá banh không|product
+Mẫu giày này còn hàng không shop|product
+Gửi mình xem mấy mẫu áo khoác mới về đi|product
+Bên mình có bán quần dài tập gym không|product
+Cái áo màu xanh kia còn không ad|product
+Shop còn bán vợt cầu lông không|product
+Cho mình xem danh sách sản phẩm mới nhất|product
+Mẫu này có mấy màu vậy shop|product
+Giày này là hàng chính hãng hay rep 11|product
+Shop có bán bóng số 5 không|product
+Bên mình có đồ thủ môn không ạ|product
+Áo này là mẫu của năm nào vậy|product
+Gửi ảnh thật sản phẩm cho mình xem với|product
+Đôi giày đỏ kia còn size 40 không|product
+Shop có bán phụ kiện bảo hộ không|product
+Mẫu này còn những màu nào|product
+Áo này có cổ hay không cổ|product
+Tìm giúp mình mấy mẫu giày chạy bộ|product
+Bên shop có bán tất chống trượt không|product
+Cho mình xin thông tin chi tiết đôi này|product
+Sản phẩm này xuất xứ ở đâu|product
+Shop có bán áo khoác gió không|product
+Mẫu này là hàng Việt Nam hay Trung Quốc|product
+Giày này đinh cao hay đinh dăm|product
+Show ra đi lười xem quá|product
+Show sản phẩm đi|product
+Gửi mình xem vài mẫu|product
+Có gì đẹp show ra coi|product
+Lười tìm quá gợi ý đi|product
+Cho xem hàng đi shop|product
+Shop còn bán áo đội tuyển Việt Nam không|product
+Có mẫu nào tương tự mẫu này không|product
+Bộ này có bán lẻ áo không hay bán cả bộ|product
+Shop có bán găng tay thủ môn không|product
+Bên mình có in tên lên áo luôn không|product
+Mẫu này hot trend năm nay phải không|product
+Giày này phù hợp đá sân cỏ nhân tạo không|product
+Shop có bán túi đựng giày không|product
+Áo này có logo thêu hay in|product
+Cho mình xem mặt sau của áo|product
+Sản phẩm này có hộp không shop|product
+Shop có bán đồ trẻ em không|product
+Mình muốn tìm mua giày nike|product
+Bên mình có dòng adidas predator không|product
+Mẫu này còn hàng không hay hết rồi|product
+Áo này nam nữ đều mặc được à|product
+Shop có bán bóng rổ không|product
+Cho mình xem kỹ đường may được không|product
+Mẫu này có sẵn tại cửa hàng không|product
+Shop cập nhật mẫu mới chưa|product
+Có bán riêng quần không shop|product
+Giày này đế gì vậy ạ|product
+Shop có bán băng đội trưởng không|product
+Mình cần mua 10 quả bóng|product
+Mẫu này còn sản xuất không shop|product
+Tư vấn giúp mình đôi giày đá sân 7 người|product
+Đôi này bao nhiêu tiền vậy shop|price
+Cái này giá sao ạ|price
+Áo này đang bán bao nhiêu k|price
+Có được giảm giá không shop|price
+Giá niêm yết là bao nhiêu vậy|price
+Đôi này 500k bán không shop|price
+Sao mắc vậy|price
+Sao đắt thế|price
+Giá này hơi mắc|price
+Mắc quá shop ơi|price
+Đắt lòi kèn|price
+Có bớt không sao mắc dữ|price
+Giá chát quá|price
+Sao giá cao vậy|price
+Mắc hơn chỗ khác|price
+Giá này khó mua quá|price
+Mua 2 cái có được bớt tiền không|price
+Giá này có bao gồm in ấn chưa|price
+Cho mình xin bảng giá sỉ|price
+Mẫu này đang sale bao nhiêu %|price
+Giá trên web là giá cuối cùng chưa|price
+Có chương trình khuyến mãi gì không|price
+Sao giá cao thế shop|price
+Giá này hơi chát|price
+Có mẫu nào giá tầm 300k không|price
+Báo giá cho mình mẫu này với|price
+Giá ship tính riêng hay chung|price
+Mua combo thì giá thế nào|price
+Đơn này tổng hết bao nhiêu tiền|price
+Có deal giá tốt cho khách quen không|price
+Giá này là cả bộ hay mỗi áo|price
+Giảm cho mình 50k được không|price
+Xin giá đẹp đi ad|price
+Mẫu này giá rẻ nhất là bao nhiêu|price
+Shop có bán hàng giá rẻ không|price
+Giá này có kèm hộp không|price
+Sao chỗ khác bán rẻ hơn shop|price
+Giá này đắt quá mình không mua nổi|price
+Có voucher giảm giá không shop|price
+Inbox báo giá giúp mình|price
+Giá công khai hay phải inbox|price
+Tầm 1 triệu mua được đôi nào|price
+Giá này áp dụng đến khi nào|price
+Sản phẩm này có đang giảm giá không|price
+Giá cũ là bao nhiêu vậy|price
+Mua số lượng lớn giá sao shop|price
+Giá niêm yết trên tem là bao nhiêu|price
+Shop có mã giảm giá cho thành viên mới không|price
+Báo giá chi tiết từng món giúp mình|price
+Tổng thiệt hại là bao nhiêu|price
+Giá này đã bao gồm VAT chưa|price
+Đôi này giá rổ thế nào|price
+Xin giá fix|price
+Giá chốt là bao nhiêu|price
+Mua hôm nay giá có tốt hơn không|price
+Giá này có quà tặng kèm không|price
+Chi phí in ấn tính thế nào|price
+Báo giá sỉ 10 bộ|price
+Giá lẻ và giá sỉ chênh nhau nhiều không|price
+Giá này mềm nhất chưa shop|price
+Làm sao để đăng ký tài khoản mới|account
+Mình quên mật khẩu rồi reset giúp mình|account
+Không đăng nhập được vào web|account
+Mình muốn đổi thông tin số điện thoại|account
+Tạo tài khoản như thế nào vậy|account
+Sao mình đăng nhập toàn báo lỗi|account
+Lấy lại mật khẩu cho mình với|account
+Mình muốn xóa tài khoản vĩnh viễn|account
+Đăng ký thành viên có mất phí không|account
+Mình muốn đổi địa chỉ giao hàng trong tài khoản|account
+Web bắt xác thực email mà mình không nhận được|account
+Tài khoản của mình bị khóa rồi|account
+Làm sao để xem điểm tích lũy|account
+Mình muốn liên kết tài khoản Facebook|account
+Đăng nhập bằng Google được không|account
+Sao mình không đổi được avatar|account
+Cập nhật ngày sinh trong profile kiểu gì|account
+Mình quên tên đăng nhập rồi|account
+Có cần đăng ký tài khoản để mua hàng không|account
+Làm sao để nâng hạng thành viên|account
+Tài khoản của mình bị hack|account
+Giúp mình bảo mật tài khoản với|account
+Mình muốn thay đổi email đăng ký|account
+Lịch sử mua hàng xem ở đâu|account
+Sao điểm thưởng của mình bị trừ|account
+Đăng ký tài khoản có ưu đãi gì không|account
+Web load chậm quá không vào được acc|account
+Mình không nhận được mã OTP|account
+Hướng dẫn mình đăng ký nick với|account
+Có đăng nhập được trên điện thoại không|account
+Thông tin tài khoản của mình có được bảo mật không|account
+Mình muốn đăng xuất khỏi các thiết bị khác|account
+Tài khoản này mua được bao nhiêu đơn rồi|account
+Sao mình không lưu được địa chỉ mới|account
+Đổi mật khẩu ở mục nào vậy shop|account
+Mình muốn kiểm tra hạng thành viên|account
+Acc này lâu không dùng có bị xóa không|account
+Làm sao để tích điểm vào tài khoản|account
+Mình nhập đúng pass mà vẫn sai|account
+Có thể dùng 2 tài khoản cùng số điện thoại không|account
+Xác minh số điện thoại kiểu gì|account
+Tài khoản khách có tra cứu đơn hàng được không|account
+Mình muốn đăng ký nhận tin khuyến mãi|account
+Hủy đăng ký nhận tin nhắn rác kiểu gì|account
+Check giúp mình tài khoản nguyenvanA|account
+Mình không nhớ email đăng ký là gì|account
+Tài khoản VIP có quyền lợi gì|account
+Làm sao để biết mình đã đăng ký thành công|account
+Web báo email đã tồn tại là sao|account
+Đăng nhập bằng số điện thoại được không|account
+Shop có nhận chuyển khoản không|payment
+Có cần đặt cọc trước không shop|payment
+Thanh toán khi nhận hàng được không|payment
+Mình muốn thanh toán qua Momo|payment
+Có chấp nhận thẻ tín dụng không|payment
+Mình muốn trả góp được không|payment
+Shop có quẹt thẻ Visa không|payment
+Thanh toán bằng ZaloPay được chứ|payment
+Chuyển khoản trước có được freeship không|payment
+Mình muốn thanh toán COD|payment
+Có xuất hóa đơn đỏ không shop|payment
+Shop có mã QR thanh toán không|payment
+Thanh toán lỗi rồi phải làm sao|payment
+Tiền trong ví không đủ thanh toán một phần được không|payment
+Có hỗ trợ Apple Pay không shop|payment
+Mình ck rồi check giúp mình nha|payment
+Nội dung chuyển khoản ghi gì|payment
+Sao mình không thấy nút thanh toán|payment
+Thanh toán online có an toàn không|payment
+Bên mình nhận ngân hàng nào|payment
+Phí thanh toán thẻ là bao nhiêu|payment
+Mình muốn đổi phương thức thanh toán|payment
+Nhận hàng rồi trả tiền mặt nha|payment
+Shop có link thanh toán VNPAY không|payment
+Có được kiểm hàng trước khi thanh toán không|payment
+Đặt cọc bao nhiêu % giá trị đơn|payment
+Mình thanh toán dư tiền shop trả lại không|payment
+Có thanh toán qua ShopeePay được không|payment
+Gửi mình số tài khoản ngân hàng|payment
+Thanh toán xong bao lâu thì xác nhận|payment
+Mình lỡ chuyển nhầm số tiền rồi|payment
+Có nhận thanh toán bằng thẻ cào không|payment
+Hệ thống báo thanh toán thất bại|payment
+Shop check xem tiền nổi chưa|payment
+Mình muốn thanh toán qua PayPal|payment
+Có trả góp qua thẻ tín dụng không|payment
+Mua nhiều có được công nợ không|payment
+Shop xác nhận đã nhận tiền chưa|payment
+Biên lai chuyển tiền đây nhé|payment
+Thanh toán lúc nhận hàng có mất phí thu hộ không|payment
+Mình gửi ảnh giao dịch qua đâu|payment
+Quẹt thẻ ATM nội địa được không|payment
+Mình muốn thanh toán 50% trước|payment
+Có hoàn tiền nếu thanh toán lỗi không|payment
+Link thanh toán bị lỗi rồi|payment
+Chuyển khoản khác ngân hàng có nhận được liền không|payment
+Mình muốn thanh toán tiền mặt tại cửa hàng|payment
+Hóa đơn thanh toán gửi về email hả shop|payment
+Xác nhận thanh toán giúp mình|payment
+Phương thức thanh toán nào nhanh nhất|payment
+Mình muốn đặt mua đôi này|order
+Hủy đơn hàng vừa đặt giúp mình với|order
+Kiểm tra giúp mình đơn hàng đi tới đâu rồi|order
+Đặt hàng thì bao lâu mới có|order
+Làm sao để kiểm tra lịch sử đơn hàng|order
+Chốt đơn này cho mình nhé|order
+Mình muốn sửa lại địa chỉ đơn hàng|order
+Đơn hàng của mình đã được gửi đi chưa|order
+Mình đặt nhầm size sửa lại giúp mình|order
+Thêm món này vào đơn hàng vừa đặt được không|order
+Mình muốn mua số lượng lớn|order
+Đơn hàng #12345 đang ở đâu rồi|order
+Tại sao đơn của mình bị hủy|order
+Shop xác nhận đơn hàng chưa|order
+Mình muốn đặt hàng qua điện thoại|order
+Hướng dẫn mình đặt hàng trên web với|order
+Đơn này mình cần gấp xử lý nhanh giúp mình|order
+Có gọi xác nhận đơn hàng không shop|order
+Mình chưa nhận được email xác nhận đơn|order
+Tra cứu mã vận đơn giúp mình|order
+Mình muốn đổi màu sản phẩm trong đơn|order
+Gộp 2 đơn hàng lại được không|order
+Mình muốn đặt đơn sỉ|order
+Sao trạng thái đơn hàng cứ chờ xử lý mãi|order
+Đơn hàng bị thất lạc rồi phải không|order
+Mình muốn đặt mẫu này size 40|order
+Shop có nhận giữ hàng không|order
+Đơn hàng này ship về địa chỉ cũ nha|order
+Bao giờ thì shop đóng gói đơn này|order
+Mình muốn đặt hàng tặng người thân|order
+Lên đơn cho mình nha|order
+Mình mới đặt xong check giúp mình|order
+Đơn hàng giá trị cao có cần cọc không|order
+Mình muốn thay đổi số điện thoại nhận hàng|order
+Đơn hàng bị hoàn trả là sao|order
+Shop hủy đơn giúp mình mình không mua nữa|order
+Đặt hàng rồi bao lâu shop gọi lại|order
+Mình đặt 2 cái sao giao có 1 cái|order
+Đơn hàng thiếu quà tặng kèm|order
+Mình muốn đặt thêm sản phẩm này|order
+Kiểm tra xem đơn đã xuất kho chưa|order
+Mình đặt hàng nhưng quên ghi chú|order
+Đơn hàng này có được freeship không|order
+Tại sao mình không đặt hàng được|order
+Mình muốn đặt hàng giao hẹn giờ|order
+Xử lý đơn hàng chậm quá|order
+Đơn đi tỉnh thì bao lâu tới|order
+Mình muốn lấy mã tracking đơn hàng|order
+Hệ thống báo đặt hàng thành công chưa|order
+Shop ưu tiên đơn này giúp mình|order
+Vải này mặc có mát không shop|material
+Chất liệu của áo này là gì vậy|material
+Giày này là da thật hay da simili|material
+Vải này có co giãn tốt không|material
+Áo này giặt máy có bị xù lông không|material
+Chất này có thấm hút mồ hôi không|material
+Vải có bị nhăn sau khi giặt không|material
+Đế giày làm bằng chất liệu gì|material
+Áo này vải thun lạnh hay cotton|material
+Chất liệu này có bền không shop|material
+Giày này đi mưa có bị bong keo không|material
+Vải này có dày dặn không|material
+Mặc cái này có bị nóng bí không|material
+Chất này co giãn 4 chiều hay 2 chiều|material
+Áo gió này có chống nước không|material
+Da này là da bò hay da tổng hợp|material
+Vải này có bị phai màu không|material
+Đế cao su hay đế nhựa vậy|material
+Chất liệu này có dễ ủi không|material
+Vải mè hay vải trơn vậy shop|material
+Áo này in decal hay in chuyển nhiệt|material
+Chất này mặc mùa hè có hợp không|material
+Vải có bị rút sau khi giặt không|material
+Giày này upper làm bằng gì|material
+Chất liệu này có an toàn cho da không|material
+Vải này có bị xước không|material
+Lót giày làm bằng gì|material
+Áo này mặc nhẹ không shop|material
+Chất thun này là thun gì|material
+Đế giày có chống trơn trượt không|material
+Vải này có cần giặt tay không|material
+Chất liệu này có bám bụi không|material
+Áo này có lớp lót bên trong không|material
+Da lộn hay da bóng vậy|material
+Chất liệu đế là boost hay eva|material
+Vải này có nhanh khô không|material
+Đinh giày làm bằng nhựa hay sắt|material
+Chất vải này có mịn không|material
+Áo này có bị dão không|material
+Găng tay này mút gì vậy|material
+Vải này xuất xứ ở đâu|material
+Chất liệu này có nặng không|material
+Áo này có chống tia UV không|material
+Vải polyester hay nylon|material
+Chất này giặt có bị co lại không|material
+Giày này da mềm hay cứng|material
+Vải này có xịn không shop|material
+Chất liệu này phù hợp chơi thể thao không|material
+Đế khâu hay đế dán|material
+Áo này vải dệt kim hay dệt thoi|material
+Cao 1m7 nặng 60kg thì mặc size gì vừa|size
+Mẫu này có size XL không shop|size
+Form áo này rộng hay ôm body vậy|size
+Tư vấn size giúp mình với|size
+Chân mình size 40 thì đi đôi này vừa không|size
+Size L với XL chênh nhau nhiều không|size
+Shop có bảng size chi tiết không|size
+Mình hay mặc size M thì mẫu này mặc size gì|size
+Áo này có size cho người 80kg không|size
+Form này là form âu hay form á|size
+Giày này form bè hay thon|size
+Mình cao 1m65 mặc size S có ngắn không|size
+Mẫu này có size trẻ em không|size
+Size 42 chiều dài chân bao nhiêu|size
+Quần này size 30 bụng bao nhiêu vừa|size
+Có size nào to hơn XXL không|size
+Shop check giúp mình còn size 39 không|size
+Form này có chuẩn size không|size
+Chân bè ngang đi size nào hợp|size
+Mình muốn đổi sang size lớn hơn|size
+Size này nam nữ mặc chung được không|size
+Áo này dài bao nhiêu cm|size
+Mình 55kg mặc size M có rộng không|size
+Giày này có cần tăng size không|size
+Size US 8 là bao nhiêu Việt Nam|size
+Mẫu này chỉ có freesize thôi à|size
+Người gầy mặc size gì đẹp|size
+Bụng to mặc size nào che được|size
+Tư vấn size giày đá bóng cho mình|size
+Size áo thủ môn tính thế nào|size
+Mình muốn lấy size nhỏ nhất|size
+Shop có nhận sửa size không|size
+Áo này size số hay size chữ|size
+Mình lỡ đặt nhầm size rồi|size
+Số đo 3 vòng 90-60-90 mặc size gì|size
+Giày này có size 45 không shop|size
+Size S dành cho người bao nhiêu kg|size
+Form này có bó sát không|size
+Mình thích mặc rộng thì lấy size nào|size
+Size giày adidas với nike có giống nhau không|size
+Cho mình xem thông số size áo|size
+Mình đo chân dài 25cm thì đi size mấy|size
+Áo này có size đại không|size
+Size M hết hàng rồi à|size
+Tư vấn size quần cho người 1m8|size
+Mình sợ chật có được đổi size không|size
+Giày này cổ cao hay thấp|size
+Size 38 còn màu trắng không|size
+Áo này fit người bao nhiêu kg|size
+Cân nặng 70kg mặc L hay XL|size
+Phí ship về Hà Nội là bao nhiêu|shipping
+Có được freeship không shop|shipping
+Bao lâu thì nhận được hàng vậy|shipping
+Ship nội thành Hồ Chí Minh bao nhiêu|shipping
+Giao hàng trong ngày được không|shipping
+Shop dùng đơn vị vận chuyển nào|shipping
+Gửi GHTK hay Viettel Post vậy|shipping
+Ship tỉnh thì bao nhiêu tiền|shipping
+Có ship hỏa tốc không shop|shipping
+Khi nào shipper giao hàng|shipping
+Phí ship cao quá giảm được không|shipping
+Mua bao nhiêu thì được miễn phí vận chuyển|shipping
+Giao hàng giờ hành chính nha shop|shipping
+Có ship COD toàn quốc không|shipping
+Bao lâu thì hàng tới nơi|shipping
+Mình cần nhận hàng trước ngày mai|shipping
+Shop có ship quốc tế không|shipping
+Giao hàng chậm quá shop ơi|shipping
+Mình muốn đổi đơn vị vận chuyển|shipping
+Shipper gọi mình không được|shipping
+Hàng đang ở bưu cục nào rồi|shipping
+Ship về Đà Nẵng mất mấy ngày|shipping
+Phí ship này người mua chịu à|shipping
+Có hỗ trợ phí ship không|shipping
+Giao hàng tận nhà hay ra bưu điện lấy|shipping
+Mình muốn nhận hàng vào chủ nhật|shipping
+Sao lâu quá chưa thấy giao hàng|shipping
+Shop check phí ship về Cần Thơ giúp mình|shipping
+Gửi xe khách cho nhanh được không|shipping
+Ship Grab hay Ahamove vậy|shipping
+Đơn hàng đang giao hay chưa đi|shipping
+Phí vận chuyển tính theo cân nặng hả|shipping
+Mình tự gọi ship đến lấy được không|shipping
+Giao sai địa chỉ rồi shop ơi|shipping
+Có giao hàng buổi tối không|shipping
+Sao phí ship đắt hơn tiền hàng vậy|shipping
+Mình có mã freeship không áp dụng được|shipping
+Giao hàng có cho xem hàng không|shipping
+Shipper thái độ lồi lõm quá|shipping
+Hàng chưa tới mà báo giao thành công|shipping
+Shop giục bên vận chuyển giúp mình|shipping
+Mình đi vắng giao lại sau được không|shipping
+Ship đồng giá hay tính theo km|shipping
+Khu vực này có bị cấm ship không|shipping
+Gửi hàng qua bưu điện hay chuyển phát nhanh|shipping
+Thời gian giao hàng dự kiến là bao giờ|shipping
+Có link theo dõi hành trình đơn hàng không|shipping
+Ship nhanh nhất là bao lâu|shipping
+Mình chịu phí ship nhanh được không|shipping
+Mặc không vừa có được đổi size không|return
+Hàng lỗi thì đổi trả như thế nào|return
+Chính sách bảo hành bên mình ra sao|return
+Mình muốn trả hàng hoàn tiền|return
+Đổi trả trong vòng bao nhiêu ngày|return
+Giày đi bị bong keo có được bảo hành không|return
+Shop gửi nhầm mẫu rồi đổi lại giúp mình|return
+Hàng không giống hình mình muốn trả lại|return
+Thủ tục đổi trả có phức tạp không|return
+Phí ship đổi trả ai chịu|return
+Mình làm mất phiếu bảo hành rồi|return
+Sản phẩm này được bảo hành bao lâu|return
+Mình đổi sang mẫu khác được không|return
+Shop có cam kết hàng chính hãng không|return
+Nếu hàng fake thì đền bù thế nào|return
+Quy trình hoàn tiền mất bao lâu|return
+Hàng bị rách lúc nhận có được đổi không|return
+Mình chưa cắt mác có đổi được không|return
+Shop từ chối bảo hành là sao|return
+Địa chỉ gửi hàng đổi trả ở đâu|return
+Có được đổi trả tại cửa hàng không|return
+Mình mua tặng nhưng không vừa muốn đổi|return
+Hàng sale có được đổi trả không|return
+Chính sách đổi trả áp dụng cho sản phẩm nào|return
+Mình muốn khiếu nại về sản phẩm|return
+Giày đi đau chân quá đổi được không|return
+Áo bị phai màu có được bảo hành không|return
+Mình muốn đổi size nhưng hết hàng thì sao|return
+Shop gửi thiếu hàng hoàn tiền cho mình|return
+Bảo hành keo trọn đời phải không|return
+Điều kiện để được đổi hàng là gì|return
+Gửi lại hàng rồi bao giờ nhận được đồ mới|return
+Mình muốn trả hàng lấy voucher|return
+Lỗi do nhà sản xuất thì đổi mới à|return
+Shop có hỗ trợ sửa chữa sau bảo hành không|return
+Mình làm rách bao bì rồi có trả được không|return
+Đổi trả có mất phí không|return
+Thời gian bảo hành tính từ ngày nào|return
+Sao mình nhắn tin đổi hàng không thấy rep|return
+Chính sách đổi trả có áp dụng cho online không|return
+Giữ lại hộp giày mới được đổi hả shop|return
+Mình muốn đổi màu khác shop ok không|return
+Hoàn tiền qua tài khoản ngân hàng hay ví|return
+Bảo hành có cần hóa đơn không|return
+Shop gửi sai size đổi gấp cho mình|return
+Mình không ưng mẫu này muốn đổi mẫu khác|return
+Có được đổi trả miễn phí không|return
+Hàng bị móp méo khi vận chuyển xử lý sao|return
+Shop có đến tận nhà lấy hàng hoàn không|return
+Quá 7 ngày rồi còn đổi được không|return
+shop ở đâu | store_info
+địa chỉ cửa hàng | store_info
+mấy giờ mở cửa | store_info
+đến trực tiếp được không | store_info
+có khuyến mãi gì không | promotion
+xin mã giảm giá | promotion
+voucher | promotion
+hotline số mấy | contact
+liên hệ admin | contact
+số điện thoại shop | contact
+đổi trả hàng | complaint
+hàng bị lỗi | complaint
+giao sai mẫu | complaint

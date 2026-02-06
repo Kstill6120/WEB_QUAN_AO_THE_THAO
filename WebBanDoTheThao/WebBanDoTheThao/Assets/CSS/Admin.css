@@ -1,0 +1,156 @@
+﻿:root {
+    --bg: #f6f7fb;
+    --text: #212529;
+    --card-bg: #ffffff;
+    --muted: #6c757d;
+    --accent: #0d6efd;
+    --sidebar-bg: #2f3b45;
+    --sidebar-text: #ffffff;
+}
+
+body.theme-light {
+    --bg: #f8f9fa;
+    --text: #212529;
+    --card-bg: #ffffff;
+    --muted: #6c757d;
+    --accent: #0d6efd;
+    --sidebar-bg: #343a40;
+    --sidebar-text: #fff;
+}
+
+body.theme-dark {
+    --bg: #0f1724;
+    --text: #e6eef8;
+    --card-bg: #111421;
+    --muted: #98a0b3;
+    --accent: #66b0ff;
+    --sidebar-bg: #0b1220;
+    --sidebar-text: #cfe8ff;
+}
+
+body.theme-brand {
+    --bg: #f0f6ff;
+    --text: #05203a;
+    --card-bg: #ffffff;
+    --muted: #6b7c93;
+    --accent: #3b82f6;
+    --sidebar-bg: #08315a;
+    --sidebar-text: #dbeeff;
+}
+
+html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+}
+
+
+.wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    background: var(--sidebar-bg);
+    color: var(--sidebar-text);
+    flex-shrink: 0;
+}
+
+    .sidebar .nav-link {
+        color: var(--sidebar-text);
+    }
+
+        .sidebar .nav-link:hover {
+            background: rgba(255,255,255,0.03);
+            color: var(--sidebar-text);
+        }
+
+.brand {
+    font-weight: 700;
+    padding: 1.25rem;
+    display: block;
+    color: var(--sidebar-text);
+}
+
+/* Content */
+.content {
+    flex: 1;
+    padding: 1.75rem;
+    background-color: var(--bg);
+}
+
+/* Topbar */
+.topbar {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+    background: transparent;
+    margin-bottom: 1rem;
+}
+
+/* Cards */
+.stat-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(13, 22, 33, 0.06);
+    padding: 1.25rem;
+    color: var(--text);
+}
+
+.stat-icon {
+    font-size: 28px;
+}
+
+/* Panels */
+.panel {
+    background: var(--card-bg);
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 6px 18px rgba(10, 20, 40, 0.04);
+}
+
+/* Table */
+.table thead th {
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+.badge-brand {
+    background: var(--accent);
+    color: #fff;
+}
+
+/* Small helpers */
+.text-muted-soft {
+    color: var(--muted);
+}
+
+.chart-legend {
+    display: flex;
+    gap: .8rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* Responsive */
+@media (max-width: 991px) {
+    .sidebar {
+        position: fixed;
+        z-index: 1030;
+        height: 100vh;
+        left: -260px;
+        transition: left .25s ease;
+    }
+
+        .sidebar.show {
+            left: 0;
+        }
+
+    main {
+        padding-top: 1rem;
+    }
+    /* hoặc .content nếu bạn dùng class .content */
+}

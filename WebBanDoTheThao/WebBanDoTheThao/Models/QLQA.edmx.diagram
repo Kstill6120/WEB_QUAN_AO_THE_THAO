@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="2ec3031e17bd465b9d3a3033dfc8a4ed" Name="Diagram1">
+        <EntityTypeShape EntityType="QLQAModel.BIENTHESP" Width="1.5" PointX="5.25" PointY="5.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLQAModel.CHITIETDONHANG" Width="1.5" PointX="7.5" PointY="2.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLQAModel.CHITIETGIOHANG" Width="1.5" PointX="7.5" PointY="9.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLQAModel.DANHGIA" Width="1.5" PointX="8.25" PointY="5.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLQAModel.DONHANG" Width="1.5" PointX="10.5" PointY="17.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLQAModel.GIAMGIA" Width="1.5" PointX="8.25" PointY="19.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLQAModel.GIOHANG" Width="1.5" PointX="8.25" PointY="24" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLQAModel.KHACHHANG" Width="1.5" PointX="6" PointY="14.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLQAModel.LICHSUDONHANG" Width="1.5" PointX="12.75" PointY="15.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLQAModel.LICHSUTHANHTOAN" Width="1.5" PointX="12.75" PointY="19.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLQAModel.LOAI" Width="1.5" PointX="0.75" PointY="6.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLQAModel.MONTT" Width="1.5" PointX="0.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLQAModel.NGUOIDUNG" Width="1.5" PointX="3" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLQAModel.SANPHAM" Width="1.5" PointX="3" PointY="5.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLQAModel.SIZE" Width="1.5" PointX="3" PointY="10.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLQAModel.sysdiagram" Width="1.5" PointX="9.75" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLQAModel.THUONGHIEU" Width="1.5" PointX="0.75" PointY="9.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="QLQAModel.YEUTHICH" Width="1.5" PointX="5.25" PointY="2.25" IsExpanded="true" />
+        <AssociationConnector Association="QLQAModel.FK_BIENTHESP_SANPHAM" ManuallyRouted="false" />
+        <AssociationConnector Association="QLQAModel.FK_BT_SIZE" ManuallyRouted="false" />
+        <AssociationConnector Association="QLQAModel.FK_CTDH_BIENTHE" ManuallyRouted="false" />
+        <AssociationConnector Association="QLQAModel.FK_CTGH_BIENTHE" ManuallyRouted="false" />
+        <AssociationConnector Association="QLQAModel.FK_DANHGIA_KHACHHANG" ManuallyRouted="false" />
+        <AssociationConnector Association="QLQAModel.FK_DANHGIA_SANPHAM" ManuallyRouted="false" />
+        <AssociationConnector Association="QLQAModel.FK_DONHANG_GIAMGIA" ManuallyRouted="false" />
+        <AssociationConnector Association="QLQAModel.FK_DONHANG_KHACHHANG" ManuallyRouted="false" />
+        <AssociationConnector Association="QLQAModel.FK_LSDH_DONHANG" ManuallyRouted="false" />
+        <AssociationConnector Association="QLQAModel.FK_LSTT_DONHANG" ManuallyRouted="false" />
+        <AssociationConnector Association="QLQAModel.FK_GIAMGIA_KHACHHANG" ManuallyRouted="false" />
+        <AssociationConnector Association="QLQAModel.FK_GIOHANG_KHACHHANG" ManuallyRouted="false" />
+        <AssociationConnector Association="QLQAModel.FK_KHACHHANG_NGUOIDUNG" ManuallyRouted="false" />
+        <AssociationConnector Association="QLQAModel.FK_SANPHAM_LOAI" ManuallyRouted="false" />
+        <AssociationConnector Association="QLQAModel.FK_SANPHAM_MONTT" ManuallyRouted="false" />
+        <AssociationConnector Association="QLQAModel.FK_YEUTHICH_NGUOIDUNG" ManuallyRouted="false" />
+        <AssociationConnector Association="QLQAModel.FK_SANPHAM_THUONGHIEU" ManuallyRouted="false" />
+        <AssociationConnector Association="QLQAModel.FK_YEUTHICH_SANPHAM" ManuallyRouted="false" />
+        <AssociationConnector Association="QLQAModel.FK_CHITIETDH_DONHANG" />
+        <AssociationConnector Association="QLQAModel.FK_CHITIETGIOHANG_GIOHANG" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

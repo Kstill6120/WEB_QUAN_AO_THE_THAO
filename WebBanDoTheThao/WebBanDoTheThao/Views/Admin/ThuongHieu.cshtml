@@ -1,0 +1,313 @@
+﻿@model List<WebBanDoTheThao.Models.THUONGHIEU>
+@{
+    ViewBag.Title = "Quản lý thương hiệu";
+    Layout = "~/Views/Shared/Admin_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-7">
+        <h2>Danh sách thương hiệu</h2>
+
+        <form method="get" class="form-inline mb-3">
+            <input type="text" name="search" value="@Request["search"]" class="form-control me-2" placeholder="Tìm theo tên...">
+            <select name="quocgia" class="form-control me-2">
+                <option>-- Tất cả --</option>
+
+                @foreach (var qg in ViewBag.QuocGiaList)
+                {
+                    <option value="@qg" @(Request["quocgia"] == qg ? "selected" : "")>@qg</option>
+                }
+            </select>
+            <button type="submit" class="btn btn-dark">Lọc</button>
+
+        </form>
+        <div class="text-right mb-3">
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addBrandModal">+ Thêm thương hiệu</button>
+
+        </div>
+        <table class="table table-bordered table-hover text-center align-middle">
+            <thead class="table-dark">
+                <tr>
+
+                    <th>#</th>
+                    <th>Mã TH</th>
+                    <th>Tên thương hiệu</th>
+                    <th>Quốc gia</th>
+                    <th>Logo</th>
+
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0;
+i < Model.Count; i++)
+                {
+                    var th = Model[i];
+                    <tr onclick="showDetail(@th.ID)" style="cursor:pointer;">
+                        <td>@(i + 1)</td>
+                        <td>@th.MATH</td>
+                        <td>@th.TENTH</td>
+
+                        <td>@th.QUOCGIA</td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(th.LOGO))
+                            {
+
+                                <img src="~/Assets/Logos/@th.LOGO" width="60" />
+                            }
+                            else
+
+                            {
+                                <span class="text-muted">Không có</span>
+                            }
+                        </td>
+
+                        <td>
+                            <button type="button" class="btn btn-sm btn-primary" onclick="editBrand(@th.ID, event)">✏️</button>
+                            <form action="/Admin/XoaThuongHieu" method="post" style="display:inline">
+
+                                <input type="hidden" name="id" value="@th.ID" />
+                                <button class="btn btn-sm btn-danger" type="submit">🗑</button>
+                            </form>
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        @Html.Partial("_Pagination")
+
+    </div>
+
+    <div class="col-md-5">
+        <div id="detailPanel" class="card shadow-sm p-3">
+            <h4 class="mb-3">Thông tin thương hiệu</h4>
+            <div id="detailContent">
+
+                <p>Chọn một thương hiệu để xem chi tiết...</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="addBrandModal" tabindex="-1" role="dialog" aria-labelledby="addBrandModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <form id="addBrandForm" action="/Admin/ThemThuongHieu" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addBrandModalLabel">Thêm thương hiệu mới</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+
+                        <label for="add_TENTH">Tên thương hiệu</label>
+                        <input type="text" id="add_TENTH" name="TENTH" class="form-control" placeholder="VD: Adidas" required />
+                    </div>
+                    <div class="form-group">
+
+                        <label for="add_QUOCGIA">Quốc gia</label>
+                        <input type="text" id="add_QUOCGIA" name="QUOCGIA" class="form-control" placeholder="VD: Đức" />
+                    </div>
+                    <div class="form-group">
+
+                        <label for="add_MOTA">Mô tả</label>
+                        <textarea id="add_MOTA" name="MOTA" class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+
+                        <label for="add_LogoFile">Logo</label>
+                        <input type="file" id="add_LogoFile" name="Logo" accept="image/*" class="form-control-file" />
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-success">Thêm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editBrandModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+            <form id="editBrandForm" action="/Admin/SuaThuongHieu" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <h5 class="modal-title">Sửa thương hiệu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="edit_ID" name="ID" />
+                    <div class="mb-3">
+                        <label for="edit_MATH">Mã thương hiệu</label>
+                        <input type="text" id="edit_MATH" name="MATH" class="form-control" readonly />
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit_TENTH">
+                            Tên thương
+                            hiệu
+                        </label>
+                        <input type="text" id="edit_TENTH" name="TENTH" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit_QUOCGIA">Quốc gia</label>
+
+                        <input type="text" id="edit_QUOCGIA" name="QUOCGIA" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit_MOTA">Mô tả</label>
+
+                        <textarea id="edit_MOTA" name="MOTA" class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label>Logo hiện tại</label>
+
+                        <div id="currentLogoWrapper" class="mb-2">
+                            <img id="currentLogo" src="" alt="logo" style="max-width:120px;
+ max-height:120px;" />
+                        </div>
+                        <label for="edit_LogoFile">Thay logo (tùy chọn)</label>
+                        <input type="file" id="edit_LogoFile" name="Logo" accept="image/*" class="form-control" />
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        function showDetail(id) {
+            fetch(`/Admin/GetById?id=${id}`)
+                .then(res => res.json())
+                .then(data => {
+
+                    if (!data) return;
+                    const logoHtml = data.LOGO ? `<img src="/Assets/Logos/${data.LOGO}" width="100" class="mb-2">` : '';
+                    document.getElementById("detailContent").innerHTML = `
+                            ${logoHtml}
+
+                <h5>${data.TENTH}</h5>
+                            <p><b>Mã:</b> ${data.MATH}</p>
+                            <p><b>Quốc gia:</b> ${data.QUOCGIA}</p>
+                            <p><b>Mô tả:</b> ${data.MOTA ??
+                        'Không có'}</p>
+                        `;
+                });
+        }
+
+        function editBrand(id, event) {
+            event.stopPropagation();
+            event.preventDefault();
+
+            fetch(`/Admin/GetById?id=${id}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (!data) return alert('Không tìm thấy thương hiệu');
+
+                    document.getElementById('edit_ID').value = data.ID;
+
+                    document.getElementById('edit_MATH').value = data.MATH;
+                    document.getElementById('edit_TENTH').value = data.TENTH;
+                    document.getElementById('edit_QUOCGIA').value = data.QUOCGIA;
+                    document.getElementById('edit_MOTA').value = data.MOTA;
+
+                    const logoImg = document.getElementById('currentLogo');
+
+                    if (data.LOGO)
+                        logoImg.src = `/Assets/Logos/${data.LOGO}`;
+                    else
+                        logoImg.src = '';
+
+
+                    const modal = new bootstrap.Modal(document.getElementById('editBrandModal'));
+                    modal.show();
+                })
+                .catch(err => {
+                    console.error('Fetch error:', err);
+                    alert('Không thể tải dữ liệu thương hiệu.');
+                });
+        }
+
+        document.getElementById('edit_LogoFile')?.addEventListener('change', e => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = ev => {
+                document.getElementById('currentLogo').src = ev.target.result;
+
+            };
+            reader.readAsDataURL(file);
+        });
+        // Hiển thị ảnh preview khi chọn file logo
+        document.getElementById('add_LogoFile')?.addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (ev) {
+                let preview = document.getElementById('addLogoPreview');
+
+
+                // nếu chưa có thẻ img thì tạo mới
+                if (!preview) {
+                    preview = document.createElement('img');
+                    preview.id = 'addLogoPreview';
+
+                    preview.style.maxWidth = '100px';
+                    preview.style.marginTop = '10px';
+                    // chèn ngay sau input file
+                    e.target.parentElement.appendChild(preview);
+                }
+
+
+                preview.src = ev.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+        document.getElementById("addBrandForm")?.addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const form = e.target;
+            const formData = new FormData(form);
+
+            fetch("/Admin/ThemThuongHieu", {
+                method: "POST",
+                body: formData
+
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Thêm thương hiệu thành công!");
+
+                        const modalEl = document.getElementById("addBrandModal");
+                        const modal = bootstrap.Modal.getInstance(modalEl);
+                        modal.hide();
+                        location.reload();
+
+                    } else {
+                        alert("Thêm thất bại: " + (data.message || "Không rõ nguyên nhân"));
+                    }
+                })
+
+                .catch(err => {
+                    console.error(err);
+                    alert("Lỗi kết nối khi thêm thương hiệu.");
+                });
+        });
+    </script>
+}

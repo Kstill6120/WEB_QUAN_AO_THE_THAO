@@ -1,0 +1,86 @@
+﻿
+/* Navbar gọn hơn */
+.navbar {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+/* Khoảng cách giữa các mục menu */
+.navbar-nav .nav-link {
+    margin: 0 20px;
+    font-weight: 500;
+}
+
+/* Icon bên phải */
+.nav-link i {
+    font-size: 1.2rem;
+    margin: 0 10px;
+}
+
+/* Badge cho giỏ hàng & yêu thích */
+.nav-link .badge {
+    font-size: 0.7rem;
+    border-radius: 50%;
+}
+.mega-dropdown .dropdown-menu {
+    width: 1000px; /* chiều rộng của mega menu */
+    padding: 20px;
+    left: 0;
+    right: 0;
+    top: 100%;
+    margin-top: 0;
+    border-top: 3px solid #f00; /* ví dụ viền đỏ */
+}
+
+.mega-dropdown:hover .dropdown-menu {
+    display: block; /* mở menu khi hover */
+}
+
+.mega-dropdown h6 {
+    font-weight: bold;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.mega-dropdown a.dropdown-item {
+    padding: 5px 0;
+    font-size: 14px;
+}
+/* dropdown user menu */
+.dropdown-user {
+    position: relative;
+}
+
+.dropdown-menu-user {
+    display: none;
+    position: absolute;
+    top: 100%; /* nằm ngay dưới icon user */
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 5px;
+    min-width: 120px;
+    text-align: center;
+    z-index: 1000;
+}
+
+    .dropdown-menu-user a {
+        display: block;
+        color: #fff;
+        padding: 5px;
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+        .dropdown-menu-user a:hover {
+            background: #444;
+        }
+
+/* Hover vào user icon thì hiện menu */
+.dropdown-user:hover .dropdown-menu-user {
+    display: block;
+}
+
+

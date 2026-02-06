@@ -1,0 +1,259 @@
+﻿@{
+    ViewData["Title"] = "Trang chủ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    // Lấy dictionary yêu thích
+    var isFavoriteDict = ViewBag.IsFavoriteDict as Dictionary<int, bool> ?? new Dictionary<int, bool>();
+
+    // Lấy danh sách sản phẩm từ Controller
+    var cheapProducts = ViewBag.CheapProducts as List<WebBanDoTheThao.Models.SANPHAM>;
+    var bestSellers = ViewBag.BestSellers as List<WebBanDoTheThao.Models.SANPHAM>;
+    var soldCounts = ViewBag.SoldCounts as Dictionary<int, int> ?? new Dictionary<int, int>();
+}
+
+<div>
+    <div id="sportBanner" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#sportBanner" data-bs-slide-to="0" class="active"></button>
+            <button type="button" data-bs-target="#sportBanner" data-bs-slide-to="1"></button>
+            <button type="button" data-bs-target="#sportBanner" data-bs-slide-to="2"></button>
+        </div>
+
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="~/Assets/images/slider_1.jpg" alt="Banner 1" class="d-block w-100">
+            </div>
+            <div class="carousel-item">
+                <img src="~/Assets/images/slider_2.jpg" alt="Banner 2" class="d-block w-100">
+            </div>
+            <div class="carousel-item">
+                <img src="~/Assets/images/slider_3.jpg" alt="Banner 3" class="d-block w-100">
+            </div>
+        </div>
+
+        <button class="carousel-control-prev" type="button" data-bs-target="#sportBanner" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" style="background-color:wheat"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#sportBanner" data-bs-slide="next">
+            <span class="carousel-control-next-icon" style="background-color:wheat"></span>
+        </button>
+    </div>
+</div>
+
+<section class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-primary"><i class="fas fa-tags me-2"></i>Sản phẩm Giá Rẻ</h2>
+        <a href="@Url.Action("ShowQABD", "Home", new { sort = "gia-tang" })" class="text-dark text-decoration-underline">Xem tất cả</a>
+    </div>
+
+    @if (cheapProducts != null && cheapProducts.Count > 0)
+    {
+        <div class="row g-4">
+            @foreach (var sp in cheapProducts)
+            {
+                bool isFav = isFavoriteDict.ContainsKey(sp.ID) && isFavoriteDict[sp.ID];
+                string iconClass = isFav ? "fas text-danger" : "far";
+                string detailUrl = Url.Action("ShowFullProduct", "Home", new { id = sp.ID });
+
+                <div class="col-6 col-md-3">
+                    <div class="card product-card border-0 shadow-sm h-100">
+                        <div class="position-relative overflow-hidden">
+                            <a href="@detailUrl" class="d-block">
+                                <img src="~/Assets/Clothes_Images/@sp.AVATAR" class="card-img-top" alt="@sp.TENSP" style="height: 250px; object-fit: cover;">
+                            </a>
+
+                            <div class="product-icons position-absolute top-50 start-50 translate-middle d-flex gap-2">
+                                <button class="btn btn-light btn-sm" onclick="location.href='@detailUrl'"><i class="fas fa-shopping-cart"></i></button>
+                                <button class="btn btn-light btn-sm quick-view-btn" data-masp="@sp.ID"><i class="fas fa-eye"></i></button>
+                            </div>
+
+                            <div class="position-absolute top-0 start-0 bg-danger text-white px-2 py-1 m-2 rounded small fw-bold">GIÁ SỐC</div>
+                        </div>
+
+                        <div class="card-body d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <p class="text-muted text-uppercase small mb-0">@(sp.THUONGHIEU?.TENTH ?? "N/A")</p>
+                                <button type="button" class="btn btn-light btn-sm btn-fav" data-masp="@sp.ID">
+                                    <i class="@iconClass fa-heart"></i>
+                                </button>
+                            </div>
+
+                            <h6 class="card-title">
+                                <a href="@detailUrl" class="text-dark text-decoration-none">@sp.TENSP</a>
+                            </h6>
+
+                            <div class="mt-auto">
+                                <p class="fw-bold text-danger mb-0 fs-5">@sp.GIA.ToString("N0")₫</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p class="text-muted">Đang cập nhật sản phẩm...</p>
+    }
+</section>
+
+<hr class="container my-4" />
+
+<section class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-danger"><i class="fas fa-fire me-2"></i>Sản phẩm Bán Chạy</h2>
+        <a href="@Url.Action("ShowQABD", "Home")" class="text-dark text-decoration-underline">Xem tất cả</a>
+    </div>
+
+    @if (bestSellers != null && bestSellers.Count > 0)
+    {
+        <div class="row g-4">
+            @foreach (var sp in bestSellers)
+            {
+                bool isFav = isFavoriteDict.ContainsKey(sp.ID) && isFavoriteDict[sp.ID];
+                string iconClass = isFav ? "fas text-danger" : "far";
+                string detailUrl = Url.Action("ShowFullProduct", "Home", new { id = sp.ID });
+
+                // Lấy số lượng đã bán từ Dictionary
+                int daBan = soldCounts.ContainsKey(sp.ID) ? soldCounts[sp.ID] : 0;
+
+                <div class="col-6 col-md-3">
+                    <div class="card product-card border-0 shadow-sm h-100">
+                        <div class="position-relative overflow-hidden">
+                            <a href="@detailUrl" class="d-block">
+                                <img src="~/Assets/Clothes_Images/@sp.AVATAR" class="card-img-top" alt="@sp.TENSP" style="height: 250px; object-fit: cover;">
+                            </a>
+                            <div class="product-icons position-absolute top-50 start-50 translate-middle d-flex gap-2">
+                                <button class="btn btn-light btn-sm" onclick="location.href='@detailUrl'"><i class="fas fa-shopping-cart"></i></button>
+                                <button class="btn btn-light btn-sm quick-view-btn" data-masp="@sp.ID"><i class="fas fa-eye"></i></button>
+                            </div>
+                            <div class="position-absolute top-0 end-0 bg-warning text-dark px-2 py-1 m-2 rounded small fw-bold"><i class="fas fa-crown"></i> HOT</div>
+                        </div>
+
+                        <div class="card-body d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <p class="text-muted text-uppercase small mb-0">@(sp.THUONGHIEU?.TENTH ?? "N/A")</p>
+                                <button type="button" class="btn btn-light btn-sm btn-fav" data-masp="@sp.ID">
+                                    <i class="@iconClass fa-heart"></i>
+                                </button>
+                            </div>
+
+                            <h6 class="card-title">
+                                <a href="@detailUrl" class="text-dark text-decoration-none">@sp.TENSP</a>
+                            </h6>
+
+                            <div class="mt-auto">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <p class="fw-bold text-danger mb-0">@sp.GIA.ToString("N0")₫</p>
+                                    <span class="small text-muted">Đã bán: <strong>@daBan</strong></span>
+                                </div>
+                                <div class="progress mt-2" style="height: 4px;">
+                                    <div class="progress-bar bg-danger" role="progressbar" style="width: 80%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p class="text-muted">Chưa có dữ liệu sản phẩm bán chạy.</p>
+    }
+</section>
+
+<section class="container mb-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="video-container rounded overflow-hidden shadow">
+                <iframe src="https://www.youtube.com/embed/wyJ2NJfWq_g"
+                        title="YouTube video player"
+                        class="w-100"
+                        style="height: 500px;"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="modal fade" id="quickViewModal" tabindex="-1" aria-labelledby="quickViewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="quickViewModalLabel">Xem Nhanh Sản Phẩm</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="quickViewContent">
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(function() {
+            // Xử lý nút Xem Nhanh (Quick View)
+            $(document).on('click', '.quick-view-btn', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var masp = $(this).data('masp');
+                var url = '@Url.Action("QuickView", "Home")';
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    data: { id: masp },
+                    beforeSend: function() {
+                        $('#quickViewContent').html('<div class="text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>');
+                    },
+                    success: function (data) {
+                        $('#quickViewContent').html(data);
+                        var quickViewModal = new bootstrap.Modal(document.getElementById('quickViewModal'));
+                        quickViewModal.show();
+                    },
+                    error: function (xhr, status, error) {
+                        var errorMessage = "Lỗi khi tải dữ liệu Quick View.";
+                        if (xhr.status == 404) {
+                            errorMessage = "Sản phẩm không tồn tại.";
+                        }
+                        $('#quickViewContent').html('<div class="alert alert-danger">' + errorMessage + '</div>');
+                    }
+                });
+            });
+
+            // Xử lý nút Yêu thích (AJAX)
+            $(document).on('click', ".btn-fav", function (e) {
+                e.stopPropagation();
+                var button = $(this);
+                var icon = button.find('i');
+                var masp = button.data("masp");
+
+                button.prop('disabled', true);
+
+                $.post("@Url.Action("AddFavorite", "Home")", { masp: masp }, function (res) {
+                    if (!res.success) {
+                        alert(res.message || "Lỗi hệ thống không xác định.");
+                        if (res.message && res.message.includes("đăng nhập")) {
+                            window.location.href = "@Url.Action("Login", "Login")";
+                        }
+                    } else {
+                        if (res.isFav) {
+                            icon.removeClass("far").addClass("fas text-danger");
+                        } else {
+                            icon.removeClass("fas text-danger").addClass("far");
+                        }
+                        $("#fav-count").text(res.count);
+                    }
+                }).fail(function() {
+                    alert("Lỗi kết nối server (AJAX).");
+                }).always(function() {
+                    button.prop('disabled', false);
+                });
+            });
+        });
+    </script>
+}

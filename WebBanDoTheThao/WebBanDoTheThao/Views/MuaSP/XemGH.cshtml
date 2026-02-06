@@ -1,0 +1,96 @@
+﻿@model IEnumerable<WebBanDoTheThao.Models.CHITIETGIOHANG>
+
+@{
+    ViewBag.Title = "Giỏ hàng của bạn";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container my-5">
+    <h2 class="mb-4 text-center">Giỏ hàng của bạn</h2>
+
+    <!-- Xóa hết giỏ hàng -->
+    <form action="@Url.Action("XoaHet", "MuaSP")" method="post" onsubmit="return confirm('Bạn có chắc chắn muốn xóa hết giỏ hàng?');">
+        <button type="submit" class="btn btn-danger mb-4 w-100">
+            <i class="fas fa-trash me-1"></i> Xóa hết giỏ hàng
+        </button>
+    </form>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning text-center">
+            Giỏ hàng của bạn đang trống.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover align-middle text-center">
+                <thead class="table-light">
+                    <tr>
+                        <th>Sản phẩm</th>
+                        <th>Ảnh</th>
+                        <th>Size</th>
+                        <th>Số lượng</th>
+                        <th>Đơn giá</th>
+                        <th>Thành tiền</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="align-middle">@item.BIENTHESP.SANPHAM.TENSP</td>
+                            <td>
+                                <img src="~/Assets/Clothes_Images/@item.BIENTHESP.SANPHAM.AVATAR"
+                                     alt="@item.BIENTHESP.SANPHAM.TENSP"
+                                     style="width:80px; height:80px; object-fit:cover;" class="rounded">
+                            </td>
+                            <td class="align-middle">@item.BIENTHESP.SIZE.TENSIZE</td>
+                            <td class="align-middle">@item.SOLUONG</td>
+                            <td class="align-middle">@string.Format("{0:N0}₫", item.DONGIA)</td>
+                            <td class="align-middle fw-bold text-danger">@string.Format("{0:N0}₫", item.THANHTIEN)</td>
+                            <td class="align-middle">
+                                <form action="@Url.Action("Xoa1GH", "MuaSP")" method="post" style="display:inline;">
+                                    <input type="hidden" name="idBienThe" value="@item.ID_BIENTHE" />
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                        <i class="fas fa-trash-alt"></i> Xóa
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-4">
+            <h4>
+                Tổng tiền:
+                <span class="text-danger fw-bold">
+                    @(ViewBag.TongTien != null ? string.Format("{0:N0}₫", ViewBag.TongTien) : "0₫")
+                </span>
+            </h4>
+            <form action="@Url.Action("NhapTTTT", "MuaSP")" method="get">
+                <button type="submit" class="btn btn-success btn-lg">
+                    <i class="fas fa-shopping-cart me-1"></i> Đặt hàng
+                </button>
+            </form>
+        </div>
+    }
+</div>
+
+<style>
+    .table th, .table td {
+        vertical-align: middle !important;
+    }
+
+    .btn {
+        transition: all 0.2s;
+    }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+</style>

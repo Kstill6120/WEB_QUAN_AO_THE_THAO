@@ -1,0 +1,121 @@
+﻿.floating-icon {
+    animation: shake 1.2s infinite;
+    transition: transform 0.3s;
+    border-radius: 50%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.floating-icon-wrapper {
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    z-index: 1000;
+}
+/* Ẩn nút lên đầu trang mặc định */
+#backToTop {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+    /* Khi có class .show thì hiện */
+#backToTop.show {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+    }
+.floating-icon {
+    position: relative;
+    margin-top: 6px;
+    width: 60px;
+    height: 60px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: shake 1.2s infinite;
+    transition: transform 0.3s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+    .floating-icon:hover {
+        transform: scale(1.1);
+    }
+
+    /* Tooltip hiển thị khi hover */
+    .floating-icon .tooltip {
+        position: absolute;
+        right: 70px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: #0084ff;
+        color: #fff;
+        padding: 6px 12px;
+        border-radius: 6px;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s, transform 0.3s;
+        font-size: 14px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .floating-icon:hover .tooltip {
+        opacity: 1;
+        transform: translateY(-50%) translateX(-5px);
+    }
+.product-card {
+    transition: transform 0.3s ease;
+}
+
+    .product-card:hover {
+        transform: translateY(-5px);
+    }
+
+/* icon mặc định ẩn */
+.product-icons {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* hover vào ảnh thì hiện icon */
+.product-card:hover .product-icons {
+    opacity: 1;
+}
+/* thumbnail ảnh nhỏ */
+.thumbnail-list {
+    margin-top: 10px;
+}
+
+.thumbnail-img {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+    .thumbnail-img:hover,
+    .thumbnail-img.active {
+        border-color: #000; /* viền đen khi chọn */
+    }
+.video-container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%; /* Tỷ lệ 16:9 */
+    height: 0;
+}
+
+    .video-container iframe {
+        margin: 100px 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }

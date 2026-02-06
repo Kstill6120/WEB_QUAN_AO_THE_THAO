@@ -1,0 +1,78 @@
+﻿.thumbnail-item {
+    border: 2px solid transparent;
+    cursor: pointer;
+    display: inline-block;
+    transition: all 0.2s;
+    line-height: 0;
+    position: relative;
+}
+
+    .thumbnail-item img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+    }
+
+    .thumbnail-item.active-preview img {
+        border-color: #dc3545;
+    }
+
+.color-variant-selector {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    opacity: 0.5;
+}
+
+    .color-variant-selector.active-color {
+        border-color: #000;
+        opacity: 1;
+    }
+
+/* CSS MỚI CHO SIZE VÀ SỐ LƯỢNG */
+.btn-size-selector {
+    padding: 0.5rem 0.9rem; /* Tăng kích thước nút size */
+    border: 1px solid #ccc;
+    color: #000;
+    font-weight: 500;
+}
+
+    .btn-size-selector:hover {
+        border-color: #dc3545; /* Hiệu ứng hover */
+    }
+
+.btn-check:checked + .btn-size-selector {
+    border: 2px solid #dc3545; /* Viền đỏ khi được chọn */
+    background-color: #fff;
+    color: #000;
+}
+
+/* TẠO KHỐI LIỀN MẠCH CHO INPUT SỐ LƯỢNG */
+.quantity-input-group .btn {
+    border: none;
+    background-color: #f8f8f8;
+    font-weight: bold;
+}
+
+.quantity-input-group .form-control {
+    border-left: none;
+    border-right: none;
+    border-color: #f8f8f8; /* Ẩn viền giữa */
+    background-color: #f8f8f8;
+    font-weight: bold;
+}
+
+/* CSS CHO NÚT THÊM VÀO GIỎ */
+.btn-add-to-cart-styled {
+    color: #dc3545; /* Chữ đỏ */
+    border: 1px solid #dc3545; /* Viền đỏ */
+    background-color: #fff;
+    font-size: 1.1rem; /* Kích thước lớn hơn */
+    padding: 0.7rem 1.5rem;
+}
+
+    .btn-add-to-cart-styled:hover {
+        background-color: #dc3545;
+        color: #fff;
+    }

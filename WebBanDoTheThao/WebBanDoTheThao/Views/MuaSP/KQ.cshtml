@@ -1,0 +1,15 @@
+﻿@{
+    ViewBag.Title = "Thanh toán thành công";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container my-5 text-center">
+    <h2 class="text-success mb-4">Thanh toán thành công!</h2>
+
+    <p>Mã đơn hàng: <strong>@ViewBag.MADH</strong></p>
+    <p>Mã khách hàng: <strong>@ViewBag.MAKH</strong></p>
+    <p>Phương thức thanh toán: <strong>@ViewBag.PhuongThuc</strong></p>
+    <p>Tổng tiền: <strong>@string.Format("{0:N0}₫", ViewBag.TongTien)</strong></p>
+
+    <a href="@Url.Action("Index", "Home")" class="btn btn-primary mt-3">Quay về trang chủ</a>
+</div>

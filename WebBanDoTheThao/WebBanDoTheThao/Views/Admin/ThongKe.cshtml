@@ -1,0 +1,244 @@
+﻿@{
+    ViewBag.Title = "Thống Kê & Báo Cáo";
+    Layout = "~/Views/Shared/Admin_Layout.cshtml";
+}
+
+<div class="container-fluid p-4">
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 border-start border-4 border-primary h-100">
+                <div class="card-body d-flex align-items-center justify-content-between">
+                    <div>
+                        <h6 class="text-muted mb-1">Tổng Doanh Thu</h6>
+                        <h4 class="fw-bold text-primary mb-0">@string.Format("{0:N0} đ", ViewBag.TongDoanhThu)</h4>
+                    </div>
+                    <i class="fa-solid fa-sack-dollar fa-2x text-primary opacity-50"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 border-start border-4 border-success h-100">
+                <div class="card-body d-flex align-items-center justify-content-between">
+                    <div>
+                        <h6 class="text-muted mb-1">Tổng Đơn Hàng</h6>
+                        <h4 class="fw-bold text-success mb-0">@ViewBag.TongDonHang</h4>
+                    </div>
+                    <i class="fa-solid fa-box-open fa-2x text-success opacity-50"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 border-start border-4 border-warning h-100">
+                <div class="card-body d-flex align-items-center justify-content-between">
+                    <div>
+                        <h6 class="text-muted mb-1">Sản Phẩm</h6>
+                        <h4 class="fw-bold text-warning mb-0">@ViewBag.TongSanPham</h4>
+                    </div>
+                    <i class="fa-solid fa-shirt fa-2x text-warning opacity-50"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 border-start border-4 border-info h-100">
+                <div class="card-body d-flex align-items-center justify-content-between">
+                    <div>
+                        <h6 class="text-muted mb-1">Khách Hàng</h6>
+                        <h4 class="fw-bold text-info mb-0">@ViewBag.TongKhachHang</h4>
+                    </div>
+                    <i class="fa-solid fa-users fa-2x text-info opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-lg-8">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-white py-3">
+                    <h6 class="m-0 fw-bold text-primary"><i class="fa-solid fa-chart-line me-2"></i>Doanh Thu Năm Nay</h6>
+                </div>
+                <div class="card-body">
+                    <canvas id="revenueChart" style="height: 300px;"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-white py-3">
+                    <h6 class="m-0 fw-bold text-primary"><i class="fa-solid fa-chart-pie me-2"></i>Trạng Thái Đơn Hàng</h6>
+                </div>
+                <div class="card-body d-flex justify-content-center align-items-center">
+                    <div style="width: 100%; max-width: 300px;">
+                        <canvas id="orderStatusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-lg-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-white py-3">
+                    <h6 class="m-0 fw-bold text-primary"><i class="fa-solid fa-ranking-star me-2"></i>Top 5 Sản Phẩm Bán Chạy (Số lượng)</h6>
+                </div>
+                <div class="card-body">
+                    <canvas id="topProductChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-white py-3">
+                    <h6 class="m-0 fw-bold text-primary"><i class="fa-solid fa-tags me-2"></i>Doanh Thu Theo Thương Hiệu</h6>
+                </div>
+                <div class="card-body d-flex justify-content-center">
+                    <div style="width: 100%; max-width: 350px;">
+                        <canvas id="brandRevenueChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // --- CẤU HÌNH CHUNG ---
+        Chart.defaults.font.family = "'Segoe UI', 'Helvetica', 'Arial', sans-serif";
+
+        // --- 1. BIỂU ĐỒ DOANH THU (LINE CHART) ---
+        const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+        const revenueData = @Html.Raw(ViewBag.ChartDoanhThuData); // Dữ liệu từ Controller
+
+        new Chart(revenueCtx, {
+            type: 'line',
+            data: {
+                labels: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11', 'T12'],
+                datasets: [{
+                    label: 'Doanh thu (VNĐ)',
+                    data: revenueData,
+                    borderColor: '#4e73df',
+                    backgroundColor: 'rgba(78, 115, 223, 0.05)',
+                    pointRadius: 4,
+                    pointBackgroundColor: '#4e73df',
+                    pointBorderColor: '#fff',
+                    pointHoverRadius: 6,
+                    tension: 0.3, // Độ cong của đường
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) { label += ': '; }
+                                if (context.parsed.y !== null) {
+                                    label += new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(context.parsed.y);
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { borderDash: [2, 4] }
+                    },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        // --- 2. BIỂU ĐỒ TRẠNG THÁI ĐƠN HÀNG (PIE CHART) ---
+        const statusCtx = document.getElementById('orderStatusChart').getContext('2d');
+        const statusLabels = @Html.Raw(ViewBag.ChartTrangThaiLabels);
+        const statusData = @Html.Raw(ViewBag.ChartTrangThaiData);
+
+        new Chart(statusCtx, {
+            type: 'pie',
+            data: {
+                labels: statusLabels,
+                datasets: [{
+                    data: statusData,
+                    backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b', '#858796'],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+
+        // --- 3. BIỂU ĐỒ TOP SẢN PHẨM (BAR CHART) ---
+        const productCtx = document.getElementById('topProductChart').getContext('2d');
+        const productLabels = @Html.Raw(ViewBag.ChartTopSPLabels);
+        const productData = @Html.Raw(ViewBag.ChartTopSPData);
+
+        new Chart(productCtx, {
+            type: 'bar',
+            data: {
+                labels: productLabels,
+                datasets: [{
+                    label: 'Số lượng đã bán',
+                    data: productData,
+                    backgroundColor: '#36b9cc',
+                    borderRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                indexAxis: 'y', // Biểu đồ cột ngang
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { beginAtZero: true }
+                }
+            }
+        });
+
+        // --- 4. BIỂU ĐỒ THƯƠNG HIỆU (DOUGHNUT CHART) ---
+        const brandCtx = document.getElementById('brandRevenueChart').getContext('2d');
+        const brandLabels = @Html.Raw(ViewBag.ChartThuongHieuLabels);
+        const brandData = @Html.Raw(ViewBag.ChartThuongHieuData);
+
+        new Chart(brandCtx, {
+            type: 'doughnut',
+            data: {
+                labels: brandLabels,
+                datasets: [{
+                    data: brandData,
+                    backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b'],
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    tooltip: {
+                         callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) { label += ': '; }
+                                if (context.parsed !== null) {
+                                    label += new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(context.parsed);
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+}

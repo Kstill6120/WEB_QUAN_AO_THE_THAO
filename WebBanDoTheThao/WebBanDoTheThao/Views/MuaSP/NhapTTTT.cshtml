@@ -1,0 +1,109 @@
+﻿@model IEnumerable<WebBanDoTheThao.Models.CHITIETGIOHANG>
+
+@{
+    ViewBag.Title = "Thông tin thanh toán";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container my-5">
+    <h2 class="mb-4 text-center">Thông Tin Thanh Toán</h2>
+
+    <div class="row">
+        <!-- FORM THÔNG TIN -->
+        <div class="col-md-6">
+            <form action="@Url.Action("XacNhanThanhToan", "MuaSP")" method="post" class="border p-4 rounded shadow-sm">
+
+                <h4 class="mb-3">Thông tin người nhận</h4>
+
+                <div class="mb-3">
+                    <label class="form-label">Họ tên</label>
+                    <input type="text" name="HoTen" value="@ViewBag.HoTen" class="form-control" required />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Số điện thoại</label>
+                    <input type="text" name="SDT" value="@ViewBag.SDT" class="form-control" required />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Địa chỉ</label>
+                    <input type="text" name="DiaChi" value="@ViewBag.DiaChi" class="form-control" required />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Ghi chú</label>
+                    <textarea name="GhiChu" class="form-control"></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Phương thức thanh toán</label>
+                    <select name="PhuongThuc" class="form-control" required>
+                        <option value="Tiền mặt">Tiền mặt</option>
+                        <option value="Chuyển khoản">Chuyển khoản</option>
+                    </select>
+                </div>
+
+                <h4 class="mt-4">
+                    Tổng tiền:
+                    <span class="text-danger fw-bold">
+                        @string.Format("{0:N0}₫", ViewBag.TongT)
+                    </span>
+                </h4>
+
+                <button type="submit" class="btn btn-primary btn-lg w-100 mt-3">
+                    Xác Nhận Thanh Toán
+                </button>
+            </form>
+        </div>
+
+        <!-- DANH SÁCH GIỎ HÀNG -->
+        <div class="col-md-6">
+            <div class="border p-4 rounded shadow-sm">
+                <h4 class="mb-3">Sản phẩm trong giỏ hàng</h4>
+
+                @if (!Model.Any())
+                {
+                    <p class="text-danger">Giỏ hàng đang trống!</p>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-striped text-center align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Ảnh</th>
+                                    <th>Sản phẩm</th>
+                                    <th>Size</th>
+                                    <th>SL</th>
+                                    <th>Thành tiền</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var sp in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            <img src="~/Assets/Clothes_Images/@sp.BIENTHESP.SANPHAM.AVATAR"
+                                                 width="60" height="60" class="rounded" style="object-fit:cover;" />
+                                        </td>
+                                        <td>@sp.BIENTHESP.SANPHAM.TENSP</td>
+                                        <td>@sp.BIENTHESP.SIZE.TENSIZE</td>
+                                        <td>@sp.SOLUONG</td>
+                                        <td class="text-danger fw-bold">@string.Format("{0:N0}₫", sp.THANHTIEN)</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+
+                <div class="text-end">
+                    <h5 class="mt-3">
+                        Tổng cộng:
+                        <span class="text-danger fw-bold">@string.Format("{0:N0}₫", ViewBag.TongT)</span>
+                    </h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

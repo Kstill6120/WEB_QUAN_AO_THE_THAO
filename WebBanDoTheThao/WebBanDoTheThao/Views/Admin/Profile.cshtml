@@ -1,0 +1,164 @@
+﻿@model WebBanDoTheThao.Models.NGUOIDUNG
+@{
+    ViewBag.Title = "Hồ sơ quản trị viên";
+    Layout = "~/Views/Shared/Admin_Layout.cshtml";
+}
+
+<div class="container-fluid p-4">
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fa-solid fa-check-circle me-2"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fa-solid fa-circle-exclamation me-2"></i> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["PassError"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fa-solid fa-key me-2"></i> @TempData["PassError"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row g-4">
+        <div class="col-md-4 col-lg-3">
+            <div class="card shadow-sm border-0 h-100 text-center py-4">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto"
+                             style="width: 100px; height: 100px; font-size: 2.5rem;">
+                            @if (Model.HO != null && Model.TEN != null)
+                            {
+                                <span>@(Model.HO.Substring(0,1) + Model.TEN.Substring(0,1))</span>
+                            }
+                            else
+                            {
+                                <i class="fa-solid fa-user-shield"></i>
+                            }
+                        </div>
+                    </div>
+                    <h5 class="fw-bold mb-1">@Model.HO @Model.TEN</h5>
+                    <p class="text-muted mb-3">@Model.EMAIL</p>
+                    <span class="badge bg-primary px-3 py-2 rounded-pill">Quản Trị Viên</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8 col-lg-9">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white border-bottom-0 pt-4 px-4">
+                    <ul class="nav nav-tabs card-header-tabs" id="profileTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active fw-bold" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab">
+                                <i class="fa-solid fa-user-pen me-2"></i>Thông tin cá nhân
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link fw-bold" id="password-tab" data-bs-toggle="tab" data-bs-target="#password" type="button" role="tab">
+                                <i class="fa-solid fa-lock me-2"></i>Đổi mật khẩu
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card-body p-4">
+                    <div class="tab-content" id="profileTabContent">
+
+                        <div class="tab-pane fade show active" id="info" role="tabpanel">
+                            @using (Html.BeginForm("UpdateProfile", "Admin", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.HiddenFor(m => m.ID)
+
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label text-muted small fw-bold">Họ</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-signature text-muted"></i></span>
+                                            @Html.EditorFor(m => m.HO, new { htmlAttributes = new { @class = "form-control border-start-0 ps-0", required = "required" } })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label text-muted small fw-bold">Tên</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-signature text-muted"></i></span>
+                                            @Html.EditorFor(m => m.TEN, new { htmlAttributes = new { @class = "form-control border-start-0 ps-0", required = "required" } })
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label text-muted small fw-bold">Email (Không thể sửa)</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light"><i class="fa-solid fa-envelope text-muted"></i></span>
+                                            <input type="text" class="form-control bg-light" value="@Model.EMAIL" readonly />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label text-muted small fw-bold">Số điện thoại</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-phone text-muted"></i></span>
+                                            @Html.EditorFor(m => m.SDT, new { htmlAttributes = new { @class = "form-control border-start-0 ps-0", type = "tel" } })
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12 mt-4 text-end">
+                                        <button type="submit" class="btn btn-primary px-4">
+                                            <i class="fa-solid fa-save me-2"></i>Lưu thay đổi
+                                        </button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="tab-pane fade" id="password" role="tabpanel">
+                            @using (Html.BeginForm("ChangePassword", "Admin", FormMethod.Post, new { @class = "row g-3" }))
+                            {
+                                @Html.AntiForgeryToken()
+
+                                <div class="col-md-12">
+                                    <label class="form-label text-muted small fw-bold">Mật khẩu hiện tại</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-key text-muted"></i></span>
+                                        <input type="password" name="CurrentPassword" class="form-control border-start-0 ps-0" required placeholder="••••••" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted small fw-bold">Mật khẩu mới</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-lock text-muted"></i></span>
+                                        <input type="password" name="NewPassword" class="form-control border-start-0 ps-0" required placeholder="••••••" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted small fw-bold">Xác nhận mật khẩu mới</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-lock-open text-muted"></i></span>
+                                        <input type="password" name="ConfirmPassword" class="form-control border-start-0 ps-0" required placeholder="••••••" />
+                                    </div>
+                                </div>
+
+                                <div class="col-12 mt-4 text-end">
+                                    <button type="submit" class="btn btn-danger px-4">
+                                        <i class="fa-solid fa-shield-halved me-2"></i>Đổi mật khẩu
+                                    </button>
+                                </div>
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,218 @@
+﻿@model List<WebBanDoTheThao.Models.SANPHAM>
+@{
+    ViewBag.Title = "Kho";
+    Layout = "~/Views/Shared/Admin_Layout.cshtml";
+}
+<div class="container-fluid">
+    <h3 class="mb-4">
+        <i class="fa-solid fa-warehouse me-2"></i> @ViewBag.Title
+    </h3>
+    <div class="panel">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <form id="filterForm" class="d-flex gap-2">
+                <input type="text" name="keyword" class="form-control" placeholder="Tìm kiếm theo Tên SP..." value="@ViewBag.Keyword" style="width: 250px;">
+                <select name="thuongHieu" class="form-select" style="width: 150px;">
+                    <option value="">-- Thương hiệu --</option>
+                    @foreach (var th in ViewBag.ListThuongHieu)
+                    {
+                        <option value="@th" selected="@(th == ViewBag.SelectedBrand)">@th</option>
+                    }
+                </select>
+                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </form>
+        </div>
+
+        <table class="table table-hover table-bordered align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th style="width: 20px;"></th>
+                    <th style="width: 80px;">Mã SP</th>
+                    <th>Tên Sản phẩm</th>
+                    <th style="width: 150px;">Thương hiệu</th>
+                    <th style="width: 120px;">Giá cơ bản</th>
+                    <th style="width: 100px;">Tổng Tồn Kho</th>
+                    <th style="width: 150px;">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null)
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr class="product-row" data-product-id="@item.ID">
+                            <td>
+                                <button class="btn btn-sm btn-outline-secondary toggle-details" data-bs-toggle="collapse" data-bs-target="#details-@item.ID">
+                                    <i class="fa-solid fa-chevron-down"></i>
+                                </button>
+                            </td>
+                            <td>@item.MASP</td>
+                            <td>@item.TENSP</td>
+                            <td>@item.THUONGHIEU.TENTH</td>
+                            <td>@string.Format("{0:N0} VNĐ", item.GIA)</td>
+                            <td>
+                                <span class="badge bg-info" id="total-stock-@item.ID">@item.BIENTHESPs.Sum(b => b.SOLUONG_TON)</span>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-primary" onclick="openNhapKhoModal('@item.ID', '@item.TENSP')">
+                                    <i class="fa-solid fa-plus me-1"></i> Nhập kho
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="7" class="p-0 border-0">
+                                <div class="collapse bg-light-subtle" id="details-@item.ID">
+                                    <table class="table table-sm table-striped mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 50px;">Size</th>
+                                                <th style="width: 100px;">Tồn kho</th>
+                                                <th>Giá bán (Biến thể)</th>
+                                                <th>Giá cơ bản</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (item.BIENTHESPs.Any())
+                                            {
+                                                foreach (var variant in item.BIENTHESPs.OrderBy(b => b.ID_SIZE))
+                                                {
+                                                    <tr>
+                                                        <td><span class="badge bg-secondary">@variant.SIZE.TENSIZE</span></td>
+                                                        <td class="fw-bold text-success">@variant.SOLUONG_TON</td>
+                                                        <td>
+                                                            @if (variant.GIA_BIENTHE.HasValue)
+                                                            {
+                                                                string.Format("{0:N0} VNĐ", variant.GIA_BIENTHE);
+                                                            }
+                                                            else
+                                                            {
+                                                                <small class="text-muted">(Giá gốc)</small>
+                                                            }
+                                                        </td>
+                                                        <td>@string.Format("{0:N0} VNĐ", item.GIA)</td>
+                                                    </tr>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <tr><td colspan="4" class="text-center text-muted">Sản phẩm này chưa có biến thể nào được nhập kho.</td></tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr><td colspan="7" class="text-center text-danger">Không tìm thấy sản phẩm nào.</td></tr>
+                }
+            </tbody>
+        </table>
+
+        @Html.Partial("_Pagination")
+    </div>
+</div>
+
+<div class="modal fade" id="nhapKhoModal" tabindex="-1" aria-labelledby="nhapKhoLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="nhapKhoLabel">Nhập Kho Chi Tiết: <span id="modalSPName"></span></h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="nhapKhoForm">
+                <div class="modal-body">
+                    <input type="hidden" id="modalSPID" name="MASP">
+                    <div id="sizeInputsContainer">
+                        <div class="alert alert-info" role="alert">
+                            Đang tải biến thể tồn kho...
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="giaNhap" class="form-label">Giá Nhập Gốc (Tham khảo)</label>
+                        <input type="number" id="giaNhap" name="GiaNhap" class="form-control" placeholder="Tùy chọn">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-primary">Xác nhận Nhập Kho</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Hàm hiển thị modal và tải biến thể (NHẬP KHO)
+        function openNhapKhoModal(productId, productName) {
+            $('#modalSPID').val(productId);
+            $('#modalSPName').text(productName);
+            $('#sizeInputsContainer').html('<div class="alert alert-info" role="alert">Đang tải biến thể tồn kho...</div>');
+
+            // 1. Tải danh sách biến thể (size) hiện tại của sản phẩm
+            $.ajax({
+                url: '@Url.Action("GetBienTheForNhapKho", "Admin")',
+                type: 'GET',
+                data: { MASP: productId },
+                success: function (data) {
+                    let html = '';
+                    if (data && data.length > 0) {
+                        data.forEach(item => {
+                            // item.TenSize, item.ID_BienThe, item.SoLuongTon, item.ID_Size
+                            html += `
+                                <div class="mb-3 row align-items-center">
+                                    <label class="col-sm-5 col-form-label">${item.TenSize} (Hiện có: ${item.SoLuongTon})</label>
+                                    <div class="col-sm-7">
+                                        <input type="number" name="SoLuongNhap_${item.ID_Size}" class="form-control" placeholder="Số lượng nhập thêm" min="0">
+                                        <input type="hidden" name="ID_BienThe_${item.ID_Size}" value="${item.ID_BienThe || ''}">
+                                    </div>
+                                </div>
+                            `;
+                        });
+                    } else {
+                        html = '<div class="alert alert-warning" role="alert">Sản phẩm này chưa được khởi tạo biến thể. Vui lòng thêm sản phẩm trước.</div>';
+                    }
+                    $('#sizeInputsContainer').html(html);
+                },
+                error: function () {
+                    $('#sizeInputsContainer').html('<div class="alert alert-danger" role="alert">Lỗi tải dữ liệu biến thể.</div>');
+                }
+            });
+
+            $('#nhapKhoModal').modal('show');
+        }
+
+
+        // Xử lý submit Nhập kho
+        $('#nhapKhoForm').on('submit', function(e) {
+            e.preventDefault();
+            const formData = $(this).serialize();
+
+            $.ajax({
+                url: '@Url.Action("XuLyNhapKho", "Admin")',
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    if (response.success) {
+                        alert('Nhập kho thành công!');
+                        $('#nhapKhoModal').modal('hide');
+                        // Tải lại trang hoặc cập nhật tổng tồn kho
+                        window.location.reload();
+                    } else {
+                        alert('Lỗi: ' + response.message);
+                    }
+                },
+                error: function (xhr) {
+                    alert('Đã xảy ra lỗi khi kết nối. Vui lòng kiểm tra Server Log.');
+                }
+            });
+        });
+
+    </script>
+}

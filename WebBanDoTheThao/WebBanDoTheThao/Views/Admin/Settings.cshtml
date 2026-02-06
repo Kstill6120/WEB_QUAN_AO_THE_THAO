@@ -1,0 +1,65 @@
+﻿
+@{
+    Layout = "~/Views/Shared/Admin_Layout.cshtml";
+    ViewBag.Title = "Settings";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel">
+                <h5>Theme</h5>
+                <p class="text-muted-soft">Chọn giao diện bạn muốn áp dụng cho bảng điều khiển.</p>
+
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-primary" data-theme-btn="light" onclick="setTheme('light')">
+                        <i class="fa-solid fa-sun me-1"></i> Light
+                    </button>
+
+                    <button class="btn btn-outline-dark" data-theme-btn="dark" onclick="setTheme('dark')">
+                        <i class="fa-solid fa-moon me-1"></i> Dark
+                    </button>
+
+                    <button class="btn btn-outline-info" data-theme-btn="brand" onclick="setTheme('brand')">
+                        <i class="fa-solid fa-droplet me-1"></i> Brand (Xanh)
+                    </button>
+                </div>
+
+                <hr />
+
+                <h6 class="mt-3">Preview</h6>
+                <div class="mt-2">
+                    <small class="text-muted-soft">Theme hiện tại: <strong id="currentTheme"></strong></small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="panel">
+                <h5>Info</h5>
+                <p class="text-muted-soft">Đổi nền thế hoy:)))</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+    function updateCurrentLabel(){
+        const t = localStorage.getItem('admin_theme') || 'light';
+        document.getElementById('currentTheme').innerText = t;
+        // highlight active btn
+        document.querySelectorAll('[data-theme-btn]').forEach(b => b.classList.remove('active'));
+        const btn = document.querySelector('[data-theme-btn="'+t+'"]');
+        if(btn) btn.classList.add('active');
+    }
+    document.addEventListener('DOMContentLoaded', updateCurrentLabel);
+    // enhance setTheme to update label (setTheme already defined in layout)
+    const originalSetTheme = window.setTheme;
+    window.setTheme = function(t){
+        if(typeof originalSetTheme === 'function') originalSetTheme(t);
+        updateCurrentLabel();
+    }
+    </script>
+}
+

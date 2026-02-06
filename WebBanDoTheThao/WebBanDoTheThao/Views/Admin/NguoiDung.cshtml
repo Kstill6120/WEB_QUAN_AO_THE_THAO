@@ -1,0 +1,290 @@
+﻿@model List<WebBanDoTheThao.Models.NGUOIDUNG>
+@{
+    ViewBag.Title = "Quản lý người dùng";
+    Layout = "~/Views/Shared/Admin_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-7">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2>Danh sách người dùng</h2>
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addUserModal">+ Thêm người dùng</button>
+        </div>
+
+        <form method="get" class="row g-2 mb-3">
+            <div class="col-md-5">
+                <input type="text" name="search" value="@Request["search"]" class="form-control" placeholder="Tìm theo họ tên, email, sđt..." />
+            </div>
+            <div class="col-md-3">
+                <select name="vaitro" class="form-select">
+                    <option value="">-- Tất cả vai trò --</option>
+                    <option value="ADMIN" @(Request["vaitro"] == "ADMIN" ? "selected" : "")>Admin</option>
+                    <option value="USER" @(Request["vaitro"] == "USER" ? "selected" : "")>Khách hàng</option>
+                    <option value="BAN" @(Request["vaitro"] == "BAN" ? "selected" : "")>Đã bị khóa (BAN)</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-dark w-100">Lọc</button>
+            </div>
+        </form>
+
+        <table class="table table-bordered table-hover text-center align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Mã ND</th>
+                    <th>Họ tên</th>
+                    <th>Email</th>
+                    <th>Vai trò</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.Count; i++)
+                {
+                    var nd = Model[i];
+                    string rowClass = nd.VAITRO == "BAN" ? "table-danger" : "";
+                    <tr class="@rowClass" style="cursor:pointer;" onclick="showDetail(@nd.ID)">
+                        <td>@(i+1)</td>
+                        <td>@nd.MAND</td>
+                        <td class="text-start">@((nd.HO ?? "") + " " + (nd.TEN ?? ""))</td>
+                        <td>@nd.EMAIL</td>
+                        <td>
+                            @if (nd.VAITRO == "BAN")
+                            {<span class="badge bg-danger">BANNED</span> }
+                            else
+                            { <span>@nd.VAITRO</span>}
+                        </td>
+                        <td>
+                            <a href="@Url.Action("NguoiDungChiTiet","Admin", new { id = nd.ID })" class="btn btn-sm btn-info">👁</a>
+
+                            <button class="btn btn-sm btn-primary" onclick="editUser(@nd.ID, event)">✏️</button>
+
+                            @if (nd.VAITRO == "BAN")
+                            {
+                                <button class="btn btn-sm btn-success" onclick="unbanUser(@nd.ID, event)" title="Mở khóa">
+                                    🔓 Unban
+                                </button>
+                            }
+                            else if (nd.VAITRO != "ADMIN")
+                            {
+                                <button class="btn btn-sm btn-danger" onclick="banUser(@nd.ID, event)" title="Cấm người dùng">
+                                    🚫 Ban
+                                </button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        @Html.Partial("_Pagination")
+    </div>
+
+    <div class="col-md-5">
+        <div class="card shadow-sm p-3">
+            <h4>Chi tiết người dùng</h4>
+            <div id="detailContent">
+                <p>Chọn một người dùng để xem chi tiết...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editUserModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="editUserForm">
+                <input type="hidden" id="edit_ID" name="ID" />
+                <div class="modal-header"><h5 class="modal-title">Sửa người dùng</h5></div>
+                <div class="modal-body">
+                    <div class="mb-2"><label class="form-label">Họ</label><input id="edit_HO" name="HO" class="form-control" /></div>
+                    <div class="mb-2"><label class="form-label">Tên</label><input id="edit_TEN" name="TEN" class="form-control" /></div>
+                    <div class="mb-2"><label class="form-label">Email</label><input id="edit_EMAIL" name="EMAIL" class="form-control" /></div>
+                    <div class="mb-2"><label class="form-label">SĐT</label><input id="edit_SDT" name="SDT" class="form-control" /></div>
+                    <div class="mb-2">
+                        <label class="form-label">Mật khẩu (để trống nếu không đổi)</label>
+                        <input id="edit_MATKHAU" name="MATKHAU" class="form-control" />
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">Vai trò</label>
+                        <select id="edit_VAITRO" name="VAITRO" class="form-select">
+                            <option value="USER">Khách hàng</option>
+                            <option value="ADMIN">Admin</option>
+                            <option value="BAN">Block (Cấm)</option>
+                        </select>
+                    </div>
+                    <div class="mb-2"><label class="form-label">Địa chỉ</label><input id="edit_DIACHI" name="DIACHI" class="form-control" /></div>
+                    <div class="mb-2"><label class="form-label">Giới tính</label><input id="edit_GIOITINH" name="GIOITINH" class="form-control" /></div>
+                    <div class="mb-2"><label class="form-label">Ngày sinh</label><input id="edit_NGAYSINH" name="NGAYSINH" type="date" class="form-control" /></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Hủy</button>
+                    <button class="btn btn-primary" type="submit">Lưu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addUserModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="addUserForm">
+                <div class="modal-header"><h5 class="modal-title">Thêm người dùng</h5></div>
+                <div class="modal-body">
+                    <div class="mb-2"><label class="form-label">Họ</label><input name="HO" class="form-control" /></div>
+                    <div class="mb-2"><label class="form-label">Tên</label><input name="TEN" class="form-control" /></div>
+                    <div class="mb-2"><label class="form-label">Email</label><input name="EMAIL" type="email" class="form-control" /></div>
+                    <div class="mb-2"><label class="form-label">SĐT</label><input name="SDT" class="form-control" /></div>
+                    <div class="mb-2"><label class="form-label">Mật khẩu</label><input name="MATKHAU" type="password" class="form-control" required /></div>
+                    <div class="mb-2">
+                        <label class="form-label">Vai trò</label>
+                        <select name="VAITRO" class="form-select">
+                            <option value="KHACHHANG">Khách hàng</option>
+                            <option value="ADMIN">Admin</option>
+                        </select>
+                    </div>
+                    <div class="mb-2"><label class="form-label">Địa chỉ (nếu KH)</label><input name="DIACHI" class="form-control" /></div>
+                    <div class="mb-2"><label class="form-label">Giới tính (nếu KH)</label><input name="GIOITINH" class="form-control" /></div>
+                    <div class="mb-2"><label class="form-label">Ngày sinh (nếu KH)</label><input name="NGAYSINH" type="date" class="form-control" /></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Hủy</button>
+                    <button class="btn btn-success" type="submit">Thêm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // --- 1. Sửa lỗi hiển thị ngày sinh bên Panel chi tiết ---
+        function showDetail(id) {
+            fetch(`/Admin/GetNguoiDungById?id=${id}`)
+                .then(r => r.json())
+                .then(d => {
+                    if (!d) {
+                        document.getElementById("detailContent").innerHTML = "<p>Không tìm thấy</p>";
+                        return;
+                    }
+                    const kh = d.KHACHHANG;
+
+                    // Xử lý ngày sinh hiển thị: Vì Controller trả về string "yyyy-MM-dd" nên ta format lại sang dd/MM/yyyy cho đẹp
+                    let ngaySinhHienThi = "";
+                    if (kh && kh.NGAYSINH) {
+                        const parts = kh.NGAYSINH.split('-'); // Tách yyyy-mm-dd
+                        if (parts.length === 3) ngaySinhHienThi = `${parts[2]}/${parts[1]}/${parts[0]}`;
+                    }
+
+                    document.getElementById("detailContent").innerHTML = `
+                            <h5>${d.HOTEN}</h5>
+                            <p><b>Mã ND:</b> ${d.MAND}</p>
+                            <p><b>Email:</b> ${d.EMAIL ?? "Không có"}</p>
+                            <p><b>SĐT:</b> ${d.SDT ?? "Không có"}</p>
+                            <p><b>Vai trò:</b> <span class="badge ${d.VAITRO === 'BAN' ? 'bg-danger' : 'bg-primary'}">${d.VAITRO}</span></p>
+                            ${kh ?
+                            `<hr><h6>Thông tin khách hàng</h6>
+                                <p><b>Mã KH:</b> ${kh.MAKH}</p>
+                                <p><b>Họ tên KH:</b> ${kh.HOTEN}</p>
+                                <p><b>Địa chỉ:</b> ${kh.DIACHI ?? ""}</p>
+                                <p><b>Giới tính:</b> ${kh.GIOITINH ?? ""}</p>
+                                <p><b>Ngày sinh:</b> ${ngaySinhHienThi}</p>` : ""
+                        }
+                        `;
+                });
+        }
+
+        // --- 2. Sửa lỗi click Edit không hiện (do lỗi null KHACHHANG) ---
+        function editUser(id, e) {
+            e.stopPropagation();
+            fetch(`/Admin/GetNguoiDungById?id=${id}`)
+                .then(r => r.json())
+                .then(d => {
+                    if (!d) return alert("Không tìm thấy");
+
+                    // Gán dữ liệu cơ bản
+                    document.getElementById("edit_ID").value = d.ID;
+                    document.getElementById("edit_HO").value = d.HO || "";
+                    document.getElementById("edit_TEN").value = d.TEN || "";
+                    document.getElementById("edit_EMAIL").value = d.EMAIL || "";
+                    document.getElementById("edit_SDT").value = d.SDT || "";
+                    document.getElementById("edit_VAITRO").value = d.VAITRO || "KHACHHANG";
+
+                    // Reset field khách hàng trước
+                    document.getElementById("edit_DIACHI").value = "";
+                    document.getElementById("edit_GIOITINH").value = "";
+                    document.getElementById("edit_NGAYSINH").value = "";
+
+                    // Kiểm tra d.KHACHHANG có tồn tại không trước khi gán
+                    if (d.KHACHHANG) {
+                        document.getElementById("edit_DIACHI").value = d.KHACHHANG.DIACHI || "";
+                        document.getElementById("edit_GIOITINH").value = d.KHACHHANG.GIOITINH || "";
+                        // Controller đã trả về format yyyy-MM-dd nên gán thẳng vào input type="date" được luôn
+                        document.getElementById("edit_NGAYSINH").value = d.KHACHHANG.NGAYSINH || "";
+                    }
+
+                    new bootstrap.Modal(document.getElementById("editUserModal")).show();
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert("Lỗi khi tải dữ liệu sửa.");
+                });
+        }
+
+        // --- 3. Thêm hàm Ban User ---
+        function banUser(id, e) {
+            e.stopPropagation();
+            if (!confirm("Bạn có chắc chắn muốn CẤM (Block) người dùng này không?")) return;
+
+            // Sử dụng URLSearchParams thay vì FormData cho đơn giản
+            fetch("/Admin/BanNguoiDung", {
+                method: "POST",
+                body: new URLSearchParams({ id: id })
+            })
+                .then(r => r.json())
+                .then(d => {
+                    if (d.success) { alert("Đã chặn thành công!"); location.reload(); }
+                    else alert("Lỗi: " + d.message);
+                });
+        }
+
+        // --- 4. Thêm hàm Unban User ---
+        function unbanUser(id, e) {
+            e.stopPropagation();
+            if (!confirm("Bạn có muốn MỞ KHÓA (Unban) tài khoản này?")) return;
+
+            fetch("/Admin/UnbanNguoiDung", {
+                method: "POST",
+                body: new URLSearchParams({ id: id })
+            })
+                .then(r => r.json())
+                .then(d => {
+                    if (d.success) { alert("Đã mở khóa thành công!"); location.reload(); }
+                    else alert("Lỗi: " + d.message);
+                });
+        }
+
+        // Các hàm Submit Form (Giữ nguyên logic)
+        document.getElementById("addUserForm")?.addEventListener("submit", function (e) {
+            e.preventDefault();
+            fetch("/Admin/ThemNguoiDung", { method: "POST", body: new FormData(e.target) })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) { alert("Thêm thành công"); location.reload(); }
+                    else alert("Lỗi: " + (data.message || "Không rõ"));
+                });
+        });
+
+        document.getElementById("editUserForm")?.addEventListener("submit", function (e) {
+            e.preventDefault();
+            fetch("/Admin/SuaNguoiDung", { method: "POST", body: new FormData(e.target) })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) { alert("Cập nhật thành công"); location.reload(); }
+                    else alert("Lỗi: " + (data.message || "Không rõ"));
+                });
+        });
+    </script>
+}

@@ -1,0 +1,150 @@
+﻿@{
+    ViewData["Title"] = "Trang chủ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 85vh;">
+    <div class="card shadow-lg p-4" style="width: 420px; border-radius: 18px;">
+        <h3 id="formTitle" class="text-center mb-4 text-primary fw-bold">Đăng nhập hệ thống</h3>
+        @{
+            if (ViewBag.Kq != null)
+            {
+                // Hiển thị thông báo (thành công hoặc lỗi)
+                <div class="alert alert-info text-center p-2 mb-3">@ViewBag.Kq</div>
+            }
+        }
+
+        <form id="loginForm" method="post" action="@Url.Action("Login", "Login")">
+            <div class="mb-3">
+                <label for="email" class="form-label fw-semibold">Email</label>
+                <input type="text" name="Email" class="form-control" placeholder="Nhập email" required />
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label fw-semibold">Mật khẩu</label>
+                <input type="password" name="Password" class="form-control" placeholder="Nhập mật khẩu" required />
+                <div class="text-end mt-1">
+                    <a href="#" id="switchToForgot" class="text-decoration-none small">Quên mật khẩu?</a>
+                </div>
+            </div>
+
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary fw-semibold">Đăng nhập</button>
+            </div>
+
+            <div class="text-center mt-3">
+                <small>Chưa có tài khoản? <a href="#" id="switchToRegister" class="text-decoration-none">Đăng ký ngay</a></small>
+            </div>
+        </form>
+
+        <form id="registerForm" class="d-none" method="post" action="@Url.Action("Register", "Login")">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold">Họ</label>
+                    <input type="text" name="Ho" class="form-control" placeholder="Nhập họ" required />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-semibold">Tên</label>
+                    <input type="text" name="Ten" class="form-control" placeholder="Nhập tên" required />
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Số điện thoại</label>
+                <input type="text" name="SDT" class="form-control" placeholder="Nhập SĐT (10 số)" pattern="0[0-9]{9}" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Email</label>
+                <input type="email" name="Email" class="form-control" placeholder="Nhập email" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Mật khẩu</label>
+                <input type="password" name="MatKhau" class="form-control" placeholder="Tạo mật khẩu" required />
+            </div>
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-success fw-semibold">Đăng ký</button>
+            </div>
+            <div class="text-center mt-3">
+                <small>Đã có tài khoản? <a href="#" class="switchToLogin text-decoration-none">Quay lại đăng nhập</a></small>
+            </div>
+        </form>
+
+        <form id="forgotForm" class="d-none" method="post" action="@Url.Action("ForgotPassword", "Login")">
+            <p class="text-muted small text-center mb-3">Nhập Email và SĐT đã đăng ký để đặt lại mật khẩu mới.</p>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Email</label>
+                <input type="email" name="Email" class="form-control" placeholder="Nhập email đã đăng ký" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Số điện thoại</label>
+                <input type="text" name="SDT" class="form-control" placeholder="Nhập SĐT đã đăng ký" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Mật khẩu mới</label>
+                <input type="password" name="NewPass" class="form-control" placeholder="Nhập mật khẩu mới" required />
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Xác nhận mật khẩu</label>
+                <input type="password" name="ConfirmPass" class="form-control" placeholder="Nhập lại mật khẩu mới" required />
+            </div>
+
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-warning fw-semibold text-white">Đổi mật khẩu</button>
+            </div>
+
+            <div class="text-center mt-3">
+                <small><a href="#" class="switchToLogin text-decoration-none">Quay lại đăng nhập</a></small>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const loginForm = document.getElementById("loginForm");
+        const registerForm = document.getElementById("registerForm");
+        const forgotForm = document.getElementById("forgotForm");
+        const title = document.getElementById("formTitle");
+
+        // Hàm ẩn hết các form
+        function hideAll() {
+            loginForm.classList.add("d-none");
+            registerForm.classList.add("d-none");
+            forgotForm.classList.add("d-none");
+        }
+
+        // Chuyển sang Đăng Ký
+        document.getElementById("switchToRegister").addEventListener("click", function (e) {
+            e.preventDefault();
+            hideAll();
+            registerForm.classList.remove("d-none");
+            title.textContent = "Đăng ký tài khoản";
+        });
+
+        // Chuyển sang Quên Mật Khẩu
+        document.getElementById("switchToForgot").addEventListener("click", function (e) {
+            e.preventDefault();
+            hideAll();
+            forgotForm.classList.remove("d-none");
+            title.textContent = "Quên mật khẩu";
+        });
+
+        // Chuyển về Đăng Nhập (cho tất cả nút có class switchToLogin)
+        document.querySelectorAll(".switchToLogin").forEach(btn => {
+            btn.addEventListener("click", function (e) {
+                e.preventDefault();
+                hideAll();
+                loginForm.classList.remove("d-none");
+                title.textContent = "Đăng nhập hệ thống";
+            });
+        });
+
+        // Giữ trạng thái Form Quên mật khẩu nếu có lỗi
+        @if (ViewBag.ShowForgot == true) {
+            <text>
+                hideAll();
+                forgotForm.classList.remove("d-none");
+                title.textContent = "Quên mật khẩu";
+            </text>
+        }
+    </script>
+}

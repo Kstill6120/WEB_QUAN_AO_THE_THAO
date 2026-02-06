@@ -1,0 +1,167 @@
+﻿@model List<WebBanDoTheThao.Models.SANPHAM>
+
+@{
+    ViewBag.Title = $"Kết quả tìm kiếm: {ViewBag.Keyword}";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var isFavoriteDict = ViewBag.IsFavoriteDict as Dictionary<int, bool> ?? new Dictionary<int, bool>();
+}
+
+<link rel="stylesheet" href="@Url.Content("~/Assets/CSS/ShowSanPham.css?v=1.1")" />
+
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
+        <div>
+            <h4 class="fw-bold text-primary mb-0">
+                <i class="fas fa-search me-2"></i>Kết quả tìm kiếm cho: "<span class="text-dark">@ViewBag.Keyword</span>"
+            </h4>
+            <small class="text-muted">Tìm thấy <b>@ViewBag.TotalResults</b> sản phẩm phù hợp.</small>
+        </div>
+        <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary btn-sm">Quay lại trang chủ</a>
+    </div>
+
+    @if (Model != null && Model.Count > 0)
+    {
+        <div class="row row-cols-2 row-cols-md-4 g-4">
+            @foreach (var sp in Model)
+            {
+                string detailUrl = Url.Action("ShowFullProduct", "Home", new { id = sp.ID });
+                bool isFav = isFavoriteDict.ContainsKey(sp.ID) && isFavoriteDict[sp.ID];
+                string iconClass = isFav ? "fas text-danger" : "far";
+
+                <div class="col-6 col-md-3">
+                    <div class="card product-card border-0 shadow-sm h-100">
+                        <div class="position-relative overflow-hidden">
+                            <a href="@detailUrl" class="d-block">
+                                <img src="~/Assets/Clothes_Images/@sp.AVATAR" class="card-img-top" alt="@sp.TENSP" style="height: 250px; object-fit: cover;">
+                            </a>
+                            <div class="product-icons position-absolute top-50 start-50 translate-middle d-flex gap-2">
+                                <button class="btn btn-light btn-sm" onclick="location.href='@detailUrl'"><i class="fas fa-shopping-cart"></i></button>
+                                <button class="btn btn-light btn-sm quick-view-btn" data-masp="@sp.ID"><i class="fas fa-eye"></i></button>
+                            </div>
+                        </div>
+
+                        <div class="card-body d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <p class="text-muted text-uppercase small mb-0">@(sp.THUONGHIEU?.TENTH ?? "N/A")</p>
+                                <button type="button" class="btn btn-light btn-sm btn-fav" data-masp="@sp.ID">
+                                    <i class="@iconClass fa-heart"></i>
+                                </button>
+                            </div>
+
+                            <h6 class="card-title">
+                                <a href="@detailUrl" class="text-dark text-decoration-none">@sp.TENSP</a>
+                            </h6>
+
+                            <div class="mt-auto">
+                                <p class="fw-bold text-danger mb-0 fs-5">@sp.GIA.ToString("N0")₫</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        if (ViewBag.TotalPages > 1)
+        {
+            <div class="d-flex justify-content-center mt-5">
+                <nav>
+                    <ul class="pagination">
+                        @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                        {
+                            <li class="page-item @(i == ViewBag.Page ? "active" : "")">
+                                <a class="page-link" href="@Url.Action("Search", new { query = ViewBag.Keyword, page = i })">@i</a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="text-center py-5">
+            <img src="https://cdn-icons-png.flaticon.com/512/6134/6134065.png" width="100" class="mb-3 opacity-50" />
+            <h5 class="text-muted">Không tìm thấy sản phẩm nào phù hợp.</h5>
+            <p>Vui lòng thử lại với từ khóa khác (ví dụ: "áo mu", "giày nike"...)</p>
+        </div>
+    }
+</div>
+
+<div class="modal fade" id="quickViewModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Xem Nhanh Sản Phẩm</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="quickViewContent"></div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // --- 1. XỬ LÝ NÚT THẢ TIM (YÊU THÍCH) ---
+            $(document).on('click', '.btn-fav', function (e) {
+                e.preventDefault();
+                var btn = $(this);
+                var icon = btn.find('i');
+                var masp = btn.data('masp');
+
+                $.ajax({
+                    url: '@Url.Action("AddFavorite", "Home")',
+                    type: 'POST',
+                    data: { masp: masp },
+                    success: function (response) {
+                        if (response.success) {
+                            // 1. Đổi icon
+                            if (icon.hasClass('far')) {
+                                icon.removeClass('far').addClass('fas text-danger');
+                            } else {
+                                icon.removeClass('fas text-danger').addClass('far');
+                            }
+
+                            // 2. CẬP NHẬT SỐ LƯỢNG TRÊN HEADER (Đây là phần bạn thiếu)
+                            $('#fav-count').text(response.count);
+
+                        } else {
+                            alert(response.message);
+                            if (response.message.includes("đăng nhập")) {
+                                window.location.href = '@Url.Action("Login", "Login")';
+                            }
+                        }
+                    },
+                    error: function () {
+                        alert("Lỗi kết nối server.");
+                    }
+                });
+            });
+
+            $(document).on('click', '.quick-view-btn', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var masp = $(this).data('masp');
+                var url = '@Url.Action("QuickView", "Home")';
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    data: { id: masp }, // QuickView trong Controller nhận 'id' nên giữ nguyên
+                    beforeSend: function() {
+                        $('#quickViewContent').html('<div class="text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>');
+                    },
+                    success: function (data) {
+                        $('#quickViewContent').html(data);
+                        var quickViewModal = new bootstrap.Modal(document.getElementById('quickViewModal'));
+                        quickViewModal.show();
+                    },
+                    error: function (xhr) {
+                        var msg = (xhr.status == 404) ? "Sản phẩm không tồn tại." : "Lỗi tải dữ liệu.";
+                        $('#quickViewContent').html('<div class="alert alert-danger">' + msg + '</div>');
+                    }
+                });
+            });
+        });
+    </script>
+}

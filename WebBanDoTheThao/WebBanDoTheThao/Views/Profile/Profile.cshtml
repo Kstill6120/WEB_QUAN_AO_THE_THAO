@@ -1,0 +1,313 @@
+﻿@model WebBanDoTheThao.Models.KHACHHANG
+@*
+    Model: KHACHHANG (Thông tin khách hàng hiện tại)
+    ViewBag.LichSuDonHangHoanTat: List<DONHANG> (Đơn hàng Đã giao)
+    ViewBag.TrangThaiDonHang: List<DONHANG> (Đơn hàng đang chờ/đang xử lý)
+    ViewBag.DeXuatSanPham: List<SANPHAM> (Các sản phẩm đề xuất ngẫu nhiên)
+*@
+
+@{
+    ViewData["Title"] = "Thông tin cá nhân";
+    Layout = "~/Views/Shared/_Layout.cshtml"; // Sử dụng layout chung
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Hiển thị thông báo từ Server (nếu có)
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <text>alert('@Html.Raw(TempData["SuccessMessage"])');</text>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <text>alert('@Html.Raw(TempData["ErrorMessage"])');</text>
+            }
+
+            // BẮT SỰ KIỆN KHI FORM CẬP NHẬT THÔNG TIN ĐƯỢC SUBMIT
+            // Tìm form dựa trên action CapNhatThongTin
+            $('form[action$="CapNhatThongTin"]').on('submit', function (e) {
+
+                // 1. Validate Ngày sinh
+                var inputDate = $('input[name="NGAYSINH"]').val();
+                if (inputDate) {
+                    var selectedDate = new Date(inputDate);
+                    var currentDate = new Date();
+                    // Set giờ về 0 để chỉ so sánh ngày
+                    currentDate.setHours(0, 0, 0, 0);
+
+                    if (selectedDate > currentDate) {
+                        alert("Lỗi: Ngày sinh không được vượt quá ngày hiện tại!");
+                        e.preventDefault(); // Chặn gửi form
+                        return false;
+                    }
+                }
+
+                // 2. Validate Số điện thoại (Định dạng)
+                var phone = $('input[name="SDT"]').val();
+                var phoneRegex = /^0\d{9,10}$/; // Bắt đầu bằng 0, tổng 10-11 số
+
+                if (!phoneRegex.test(phone)) {
+                    alert("Lỗi: Số điện thoại không đúng định dạng (Phải bắt đầu bằng số 0 và có 10-11 số)!");
+                    e.preventDefault(); // Chặn gửi form
+                    return false;
+                }
+
+                // Lưu ý: Việc kiểm tra SĐT "có tồn tại trong DB không" nên để Server xử lý (như code Controller ở trên)
+                // để bảo mật và chính xác nhất.
+            });
+        });
+    </script>
+}
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4 fw-bold text-primary">THÔNG TIN TÀI KHOẢN</h2>
+    <hr />
+
+    <div class="row">
+        <div class="col-md-3">
+            @* Sidebar Menu *@
+            <div class="list-group shadow-sm">
+                <a class="list-group-item list-group-item-action active" id="profile-tab" data-bs-toggle="list" href="#thongtin" role="tab">
+                    <i class="fas fa-user-circle me-2"></i> Thông tin cá nhân
+                </a>
+                <a class="list-group-item list-group-item-action" id="security-tab" data-bs-toggle="list" href="#baomat" role="tab">
+                    <i class="fas fa-lock me-2"></i> Bảo mật tài khoản
+                </a>
+                <a class="list-group-item list-group-item-action" id="status-tab" data-bs-toggle="list" href="#trangthai" role="tab">
+                    <i class="fas fa-tasks me-2"></i> Trạng thái Đơn hàng
+                </a>
+                <a class="list-group-item list-group-item-action" id="completed-orders-tab" data-bs-toggle="list" href="#lichsudagiao" role="tab">
+                    <i class="fas fa-box-check me-2"></i> Lịch sử Đã giao
+                </a>
+            </div>
+            <div class="text-center mt-3">
+                <a href="@Url.Action("Logout", "Login")" class="btn btn-outline-danger w-100">
+                    <i class="fas fa-sign-out-alt me-2"></i> Đăng xuất
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <div class="tab-content border p-4 bg-white rounded shadow-sm">
+
+                @* 1. Thông tin cá nhân và Chỉnh sửa *@
+                <div class="tab-pane fade show active" id="thongtin" role="tabpanel">
+                    <h5 class="mb-3 text-primary fw-bold"><i class="fas fa-address-card me-2"></i> Cập nhật Thông tin cá nhân</h5>
+                    @using (Html.BeginForm("CapNhatThongTin", "Profile", FormMethod.Post, new { @class = "row g-3" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(model => model.MAKH)
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Họ và Tên</label>
+                            <input type="text" class="form-control" name="HOTEN" value="@Model.HOTEN" required />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Số điện thoại</label>
+                            <input type="tel" class="form-control" name="SDT" value="@Model.SDT" required />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Ngày sinh</label>
+                            <input type="date" class="form-control" name="NGAYSINH" value="@(Model.NGAYSINH.HasValue ? Model.NGAYSINH.Value.ToString("yyyy-MM-dd") : "")" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Giới tính</label>
+                            <select class="form-select" name="GIOITINH">
+                                <option value="Nam" @(Model.GIOITINH == "Nam" ? "selected" : "")>Nam</option>
+                                <option value="Nữ" @(Model.GIOITINH == "Nữ" ? "selected" : "")>Nữ</option>
+                                <option value="Khác" @(Model.GIOITINH == "Khác" ? "selected" : "")>Khác</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-bold">Địa chỉ</label>
+                            <input type="text" class="form-control" name="DIACHI" value="@Model.DIACHI" />
+                        </div>
+                        <div class="col-12 mt-4">
+                            <button type="submit" class="btn btn-success"><i class="fas fa-save me-2"></i>Lưu thông tin</button>
+                        </div>
+                    }
+                </div>
+
+                @* 2. Bảo mật tài khoản (Đổi Email, Mật khẩu) *@
+                <div class="tab-pane fade" id="baomat" role="tabpanel">
+                    <h5 class="mb-3 text-danger fw-bold"><i class="fas fa-user-shield me-2"></i> Cập nhật Bảo mật tài khoản</h5>
+
+                    <h6 class="fw-bold mb-3 text-decoration-underline">Đổi Mật khẩu</h6>
+                    @using (Html.BeginForm("DoiMatKhau", "Profile", FormMethod.Post, new { @class = "row g-3" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="col-md-4">
+                            <input type="password" class="form-control" name="MatKhauCu" placeholder="Mật khẩu cũ" required />
+                        </div>
+                        <div class="col-md-4">
+                            <input type="password" class="form-control" name="MatKhauMoi" placeholder="Mật khẩu mới" required />
+                        </div>
+                        <div class="col-md-4">
+                            <input type="password" class="form-control" name="XacNhanMatKhau" placeholder="Xác nhận mật khẩu" required />
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-danger"><i class="fas fa-key me-2"></i>Đổi mật khẩu</button>
+                        </div>
+                    }
+                    <hr class="my-4" />
+
+                    <h6 class="fw-bold mb-3 text-decoration-underline">Đổi Email</h6>
+                    @using (Html.BeginForm("DoiEmail", "Profile", FormMethod.Post, new { @class = "row g-3" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="col-md-6">
+                            <input type="email" class="form-control" name="EmailMoi" placeholder="Email mới" required />
+                        </div>
+                        <div class="col-md-6">
+                            <input type="password" class="form-control" name="MatKhauXacNhan" placeholder="Xác nhận bằng mật khẩu" required />
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-warning"><i class="fas fa-envelope me-2"></i>Đổi Email</button>
+                        </div>
+                    }
+                </div>
+
+                @* 3. Trạng thái Đơn hàng (Đang chờ/Đang xử lý) - Đơn hàng TRANGTHAI != "Đã giao" *@
+                <div class="tab-pane fade" id="trangthai" role="tabpanel">
+                    <h5 class="mb-3 text-warning fw-bold"><i class="fas fa-tasks me-2"></i> Đơn hàng Đang chờ/Đang xử lý (@(ViewBag.TrangThaiDonHang.Count ?? 0) đơn)</h5>
+
+                    @if (ViewBag.TrangThaiDonHang != null && ViewBag.TrangThaiDonHang.Count > 0)
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Mã Đơn</th>
+                                        <th>Ngày Lập</th>
+                                        <th>Tổng Tiền</th>
+                                        <th>Trạng Thái</th>
+                                        <th>Chi tiết</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var donHang in ViewBag.TrangThaiDonHang)
+                                    {
+                                        <tr>
+                                            <td>@donHang.ID</td> @* Giả định ID là Mã đơn hàng *@
+                                            <td>@donHang.NGAYLAP.ToString("dd/MM/yyyy")</td>
+                                            <td>@string.Format("{0:N0} VNĐ", donHang.TONGTIEN)</td>
+                                            <td><span class="badge bg-danger">@donHang.TRANGTHAI</span></td>
+                                            <td><a href="@Url.Action("ChiTietTrangThai", "Profile", new { id = donHang.ID })" class="btn btn-sm btn-outline-warning">Xem Trạng thái</a></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info text-center" role="alert">
+                            <i class="fas fa-check-circle me-2"></i> Hiện tại không có đơn hàng nào đang chờ xử lý.
+                        </div>
+                    }
+                </div>
+
+                @* 4. Lịch sử Đã giao (Đơn hàng hoàn tất) - Đơn hàng TRANGTHAI == "Đã giao" *@
+                <div class="tab-pane fade" id="lichsudagiao" role="tabpanel">
+                    <h5 class="mb-3 text-success fw-bold"><i class="fas fa-history me-2"></i> Lịch sử Đơn hàng Đã giao (@(ViewBag.LichSuDonHangHoanTat.Count ?? 0) đơn)</h5>
+
+                    @if (ViewBag.LichSuDonHangHoanTat != null && ViewBag.LichSuDonHangHoanTat.Count > 0)
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Mã Đơn</th>
+                                        <th>Ngày Lập</th>
+                                        <th>Tổng Tiền</th>
+                                        <th>Xem chi tiết</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var donHang in ViewBag.LichSuDonHangHoanTat)
+                                    {
+                                        <tr>
+                                            <td>@donHang.ID</td>
+                                            <td>@donHang.NGAYLAP.ToString("dd/MM/yyyy")</td>
+                                            <td>@string.Format("{0:N0} VNĐ", donHang.TONGTIEN)</td>
+                                            <td><a href="@Url.Action("ChiTietTrangThai", "Profile", new { id = donHang.ID })" class="btn btn-sm btn-outline-success">Chi tiết</a></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning text-center" role="alert">
+                            <i class="fas fa-box-open me-2"></i> Bạn chưa có đơn hàng nào đã giao.
+                        </div>
+                    }
+                </div>
+
+            </div> @* end tab-content *@
+        </div>
+    </div>
+</div>
+
+<hr class="my-5" />
+
+@* Sản phẩm Đề xuất (Carousel) *@
+<div class="container mt-5 mb-5">
+    <h3 class="text-center mb-4 fw-bold text-uppercase text-danger">GỢI Ý SẢN PHẨM DÀNH CHO BẠN</h3>
+
+    @if (ViewBag.DeXuatSanPham != null && ViewBag.DeXuatSanPham.Count > 0)
+    {
+        <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                @{
+                    int productIndex = 0;
+                    int itemsPerSlide = 4;
+                    var products = (List<WebBanDoTheThao.Models.SANPHAM>)ViewBag.DeXuatSanPham;
+                }
+                @while (productIndex < products.Count)
+                {
+                    <div class="carousel-item @(productIndex == 0 ? "active" : "")">
+                        <div class="row">
+                            @for (int i = 0; i < itemsPerSlide; i++)
+                            {
+                                if (productIndex < products.Count)
+                                {
+                                    var product = products[productIndex];
+                                    <div class="col-md-3">
+                                        <div class="card h-100 product-card shadow-sm border-0">
+                                            <img src="~/Assets/Clothes_Images/@product.AVATAR" class="card-img-top" alt="@product.TENSP" style="height: 200px; object-fit: cover;">
+                                            <div class="card-body d-flex flex-column">
+                                                <h6 class="card-title fw-bold text-truncate">@product.TENSP</h6>
+                                                <p class="card-text text-danger fw-bold mt-auto">@string.Format("{0:N0} VNĐ", product.GIA)</p>
+                                                <a href="@Url.Action("ShowFullProduct", "Home", new { id = product.ID })" class="btn btn-sm btn-primary mt-2">Xem chi tiết</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    productIndex++;
+                                }
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+
+            @* Navigation Buttons *@
+            <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon bg-dark rounded-circle" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon bg-dark rounded-circle" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info text-center" role="alert">
+            <i class="fas fa-info-circle me-2"></i> Tạm thời chưa có sản phẩm đề xuất nào.
+        </div>
+    }
+</div>

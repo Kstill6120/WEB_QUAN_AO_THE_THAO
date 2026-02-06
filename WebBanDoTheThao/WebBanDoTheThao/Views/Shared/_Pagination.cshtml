@@ -1,0 +1,80 @@
+﻿@{
+    // Lấy thông tin phân trang từ ViewBag
+    int currentPage = ViewBag.Page ?? 1;
+    int totalPages = (int)(ViewBag.TotalPages ?? 1);
+
+    // LẤY CÁC THAM SỐ ĐẶC TRƯNG CỦA TRANG CHI TIẾT SẢN PHẨM (Đánh giá)
+    int? productId = ViewBag.ProductId as int?; // ID sản phẩm
+    var sort = ViewBag.CurrentSort as string;   // Sắp xếp
+    int? starFilter = ViewBag.CurrentStarFilter as int?; // Lọc sao
+
+    // Lấy các tham số lọc chung (Dành cho trang danh mục)
+    var keyword = ViewBag.Keyword as string;
+    var thuongHieu = ViewBag.SelectedBrand as string;
+    var tenMon = ViewBag.SelectedMon as string;
+
+    // Tên Action và Controller hiện tại
+    var currentAction = ViewContext.RouteData.GetRequiredString("action");
+    var currentController = ViewContext.RouteData.GetRequiredString("controller");
+
+    // Tạo Dictionary chứa các tham số cơ bản, luôn có
+    var routeValues = new System.Web.Routing.RouteValueDictionary();
+    routeValues.Add("page", currentPage);
+    routeValues.Add("keyword", keyword);
+    routeValues.Add("thuongHieu", thuongHieu);
+    routeValues.Add("tenMon", tenMon);
+
+    // THÊM CÁC THAM SỐ ĐẶC THÙ (ID, Sort, StarFilter) NẾU CHÚNG TỒN TẠI
+    if (productId.HasValue)
+    {
+        routeValues.Add("id", productId.Value);
+        routeValues.Add("sort", sort);
+        routeValues.Add("starFilter", starFilter);
+    }
+}
+
+@if (totalPages > 1)
+{
+    <nav aria-label="Page navigation" class="mt-3">
+        <ul class="pagination justify-content-center">
+
+            <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                @{
+                    routeValues["page"] = currentPage - 1;
+                }
+                <a class="page-link"
+                   href="@Url.Action(currentAction, currentController, routeValues)"
+                   aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+
+            @for (int i = 1; i <= totalPages; i++)
+            {
+                <li class="page-item @(i == currentPage ? "active" : "")">
+                    @{
+                        routeValues["page"] = i;
+                    }
+                    <a class="page-link"
+                       href="@Url.Action(currentAction, currentController, routeValues)">
+                        @i
+                    </a>
+                </li>
+            }
+
+            <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                @{
+                    routeValues["page"] = currentPage + 1;
+                }
+                <a class="page-link"
+                   href="@Url.Action(currentAction, currentController, routeValues)"
+                   aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+        <small class="text-muted-soft d-block text-center mt-2">
+            Trang @currentPage trên @totalPages
+        </small>
+    </nav>
+}

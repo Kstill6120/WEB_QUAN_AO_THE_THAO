@@ -1,0 +1,72 @@
+﻿.footer-custom {
+    background-color: #f8f5f0; /* màu da/beige */
+}
+
+    /* link trong footer không xanh và không gạch chân */
+    .footer-custom a {
+        color: #212529; /* màu đen xám đậm */
+        text-decoration: none;
+    }
+
+        .footer-custom a:hover {
+            color: blue; /* đen đậm khi hover */
+            text-decoration: none; /* vẫn không gạch chân */
+        }
+.footer-logo {
+    height: 200px; /* to hơn một chút so với 50px */
+    max-width: 100%;
+}
+.footer-bubble {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    font-size: 14px;
+}
+
+.tooltip-bubble {
+    position: fixed;
+    bottom: 50px;
+    left: 20px;
+    background-color: white;
+    color: #111;
+    padding: 10px 14px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    max-width: 250px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.close-btn {
+    background: transparent;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #888;
+    margin-left: auto;
+}
+
+.tooltip-bubble::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 20px;
+    border-width: 8px;
+    border-style: solid;
+    border-color: white transparent transparent transparent;
+}
+
+.close-bubble {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.close-btn:hover {
+    color: #ff0000;
+}
